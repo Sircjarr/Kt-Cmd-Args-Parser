@@ -35,6 +35,12 @@ class CmdArgsParser(
 
     private var parseResult: Result<Any>? = null
 
+    private val argKeyRegex = "^--?[a-zA-Z][a-zA-Z-]*$".toRegex()
+    private val helpRegex = "help|--help".toRegex()
+    private val versionRegex = "version|--version".toRegex()
+    private val quitRegex = "q|quit|exit|--quit|--exit".toRegex()
+    private val subcommandRegex = "[a-zA-Z0-9]+".toRegex()
+
     fun <T> optionalArg(
         vararg keys: String,
         valueLabel: String,
@@ -245,7 +251,7 @@ class CmdArgsParser(
     }
 
     fun <T> subparser(subcommand: String, creator: (CmdArgsParser) -> T): Subcommand<T?> {
-        validateSubparser(subcommand)
+        validateSubcommand(subcommand)
 
         return if (args.firstOrNull() == subcommand) {
             val subparser = CmdArgsParser(args.sliceArray(1..args.lastIndex), "$programName $subcommand", version)
@@ -260,15 +266,6 @@ class CmdArgsParser(
             creator(subparser)
             subparsers[subcommand]!! as Subcommand<T?>
         }
-    }
-
-    private fun validateSubparser(subcommand: String) {
-        require(subcommand.matches("[a-zA-Z0-9]+".toRegex())) { "Invalid subcommand format: $subcommand" }
-        require(!subparsers.containsKey(subcommand)) { "Subcommand already declared: $subcommand" }
-    }
-
-    private fun validatePosValueLabel(label: String) {
-        require(positionals.none { it.valueLabel == label }) { "Positional arg already declared: $label" }
     }
 
     private fun findValueInArgs(
@@ -288,21 +285,36 @@ class CmdArgsParser(
             require(keys.all { !optsKeyValueMap.containsKey(it) }) { "${getKeysLogTag(keys)} key already declared" }
             require(keys.none { it.isBuiltInCommand() }) { "${getKeysLogTag(keys)} key contains a builtin command" }
         } catch (e: Exception) {
-            throw CmdArgsInitializeException(e)
+            throw CmdArgsParserInitializationException(e)
         }
-        optsKeyValueMap.putAll(keys.associate { it to null })
+        optsKeyValueMap.putAll(keys.associateWith { null })
     }
 
     private fun <T> validateMapKeys(mapping: Map<String, T>) {
         try {
-            require(mapping.isNotEmpty()) { "mapping must not be empty" }
+            require(mapping.isNotEmpty()) { "key-value mapping must not be empty" }
             mapping.keys.forEach {
-                require(!it.isKeyArg()) { "serializable arg $it must match not match the key arg pattern" }
+                require(!it.isKeyArg()) { "map key arg $it must match not match the key arg pattern" }
             }
-        } catch (e: CmdArgsSerializationException) {
-            throw e
         } catch (e: Exception) {
-            throw CmdArgsInitializeException(e)
+            throw CmdArgsParserInitializationException(e)
+        }
+    }
+
+    private fun validatePosValueLabel(label: String) {
+        try {
+            require(positionals.none { it.valueLabel == label }) { "Positional arg already declared: $label" }
+        } catch (e: Exception) {
+            throw CmdArgsParserInitializationException(e)
+        }
+    }
+
+    private fun validateSubcommand(subcommand: String) {
+        try {
+            require(subcommand.matches(subcommandRegex)) { "Invalid subcommand format: $subcommand" }
+            require(!subparsers.containsKey(subcommand)) { "Subcommand already declared: $subcommand" }
+        } catch (e: Exception) {
+            throw CmdArgsParserInitializationException(e)
         }
     }
 
@@ -320,22 +332,22 @@ class CmdArgsParser(
         val parsedArgs = creator(this)
         cmdArgHelpConfig = if (parsedArgs is CmdArgHelpConfigHolder) parsedArgs.cmdArgHelpConfig else null
 
-        if (args.isEmpty() || args.firstOrNull()?.matches("help|--help".toRegex()) == true) {
+        if (args.isEmpty() || args.firstOrNull()?.matches(helpRegex) == true) {
             printHelp()
             // exitProcess(EXIT_CODE_SUCCESS)
-            return Result.failure(CmdArgsRanBuiltInCommandException("--help"))
+            return Result.failure(CmdArgsBuiltinCommandException("--help"))
         }
 
-        if (args.isEmpty() || args.firstOrNull()?.matches("version|--version".toRegex()) == true) {
+        if (args.isEmpty() || args.firstOrNull()?.matches(versionRegex) == true) {
             printVersion()
             // exitProcess(EXIT_CODE_SUCCESS)
-            return Result.failure(CmdArgsRanBuiltInCommandException("--version"))
+            return Result.failure(CmdArgsBuiltinCommandException("--version"))
         }
 
-        val quitArg = args.firstOrNull()?.matches("q|quit|exit|--quit|--exit".toRegex()) == true
+        val quitArg = args.firstOrNull()?.matches(quitRegex) == true
         if (quitArg) {
             exitProcess(EXIT_CODE_SUCCESS)
-            return Result.failure(CmdArgsRanBuiltInCommandException("quit"))
+            return Result.failure(CmdArgsBuiltinCommandException("quit"))
         }
 
         if (activeSubcommand != null) {
@@ -347,10 +359,16 @@ class CmdArgsParser(
             }
         }
 
-        return try {
+        try {
             validateArgsListFormat()
-            validateCmdArgValues()
+        } catch (e: Exception) {
+            val parseEx = MalformedArgsException(e)
+            printHelpAndExceptionAndExitProcess(e)
+            return Result.failure(parseEx)
+        }
 
+        return try {
+            validateCmdArgValues()
             Result.success(parsedArgs)
         } catch (e: Exception) {
             val parseEx = CmdArgsParseException(e)
@@ -360,8 +378,8 @@ class CmdArgsParser(
     }
 
     private fun printHelpAndExceptionAndExitProcess(e: Exception) {
+        println(e.toString())
         printHelp()
-        e.printStackTrace()
         // exitProcess(EXIT_CODE_ERR_CMD_MISUSE)
     }
 
@@ -508,23 +526,11 @@ class CmdArgsParser(
     }
 
     private fun String.isKeyArg(): Boolean {
-        return isVerboseKey() || isSingleKeyArg() || isStackedFlagArg()
-    }
-
-    private fun String.isVerboseKey(): Boolean {
-        return matches("^--[a-zA-Z]+[a-zA-Z-]*$".toRegex())
-    }
-
-    private fun String.isSingleKeyArg(): Boolean {
-        return matches("^-[a-zA-Z]$".toRegex())
-    }
-
-    private fun String.isStackedFlagArg(): Boolean {
-        return matches("^-[a-zA-Z][a-zA-Z]+$".toRegex())
+        return matches(argKeyRegex)
     }
 
     private fun String.isBuiltInCommand(): Boolean {
-        return matches("--help|--version|q|quit|exit".toRegex())
+        return matches(helpRegex) || matches(versionRegex) || matches(quitRegex)
     }
 
     fun printHelp() {
