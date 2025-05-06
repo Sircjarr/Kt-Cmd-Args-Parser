@@ -10,13 +10,8 @@ import lib.lib_args_parse.help.CmdArgsParserHelpPrinter
 import lib.lib_args_parse.model.CmdArgNonNull
 import lib.lib_args_parse.model.CmdArgNullable
 import lib.lib_args_parse.model.Subcommand
-import kotlin.system.exitProcess
 
 private const val OPTIONS_POSITIONALS_ARGS_DELIM = "--"
-
-private const val EXIT_CODE_SUCCESS = 0
-private const val EXIT_CODE_ERR_GENERAL = 1
-private const val EXIT_CODE_ERR_CMD_MISUSE = 2
 
 @Suppress("UNCHECKED_CAST")
 class CmdArgsParser(
@@ -343,19 +338,16 @@ class CmdArgsParser(
 
         if (args.isEmpty() || args.firstOrNull()?.matches(helpRegex) == true) {
             printHelp()
-            // exitProcess(EXIT_CODE_SUCCESS)
             return Result.failure(CmdArgsBuiltinCommandException("--help"))
         }
 
         if (args.isEmpty() || args.firstOrNull()?.matches(versionRegex) == true) {
             printVersion()
-            // exitProcess(EXIT_CODE_SUCCESS)
             return Result.failure(CmdArgsBuiltinCommandException("--version"))
         }
 
         val quitArg = args.firstOrNull()?.matches(quitRegex) == true
         if (quitArg) {
-            exitProcess(EXIT_CODE_SUCCESS)
             return Result.failure(CmdArgsBuiltinCommandException("quit"))
         }
 
@@ -372,7 +364,7 @@ class CmdArgsParser(
             validateArgsListFormat()
         } catch (e: Exception) {
             val parseEx = MalformedArgsException(e)
-            printHelpAndExceptionAndExitProcess(e)
+            printErrorAndHelp(e)
             return Result.failure(parseEx)
         }
 
@@ -381,15 +373,14 @@ class CmdArgsParser(
             Result.success(parsedArgs)
         } catch (e: Exception) {
             val parseEx = CmdArgsParseException(e)
-            printHelpAndExceptionAndExitProcess(e)
+            printErrorAndHelp(e)
             Result.failure(parseEx)
         }
     }
 
-    private fun printHelpAndExceptionAndExitProcess(e: Exception) {
+    private fun printErrorAndHelp(e: Exception) {
         println(e.toString())
         printHelp()
-        // exitProcess(EXIT_CODE_ERR_CMD_MISUSE)
     }
 
     private fun printVersion() {
@@ -406,8 +397,6 @@ class CmdArgsParser(
      * In addition, checks all required and positional args are accounted for
      */
     private fun validateArgsListFormat() {
-        // Validate flags, optionals, and required args have valid arguments
-
         var i = 0
         while (i < args.size) {
             val arg = args[i]

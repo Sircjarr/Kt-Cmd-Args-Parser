@@ -3,7 +3,7 @@ import lib.lib_args_parse.help.CmdArgHelpConfigHolder
 import lib.lib_args_parse.CmdArgsParser
 import kotlin.test.*
 
-class MyArgs(parser: CmdArgsParser) : CmdArgHelpConfigHolder {
+class CmdArgsParserTestArgs(parser: CmdArgsParser) : CmdArgHelpConfigHolder {
 
     // Optionals
     val o: String? by parser.optionalArg("-o", "--opt-string", valueLabel = "OPT_O", hint = "Optional O hint")
@@ -105,7 +105,7 @@ class MyArgs(parser: CmdArgsParser) : CmdArgHelpConfigHolder {
 class CmdArgsParserTest {
 
     @Test
-    fun exec() {
+    fun parsesSuccessfully() {
         val args = arrayOf(
             // Optionals
             "-o", "optional string value",
@@ -132,7 +132,7 @@ class CmdArgsParserTest {
         )
 
         val parser = CmdArgsParser(args, "_CmdArgsParserTest.kt")
-        val res = parser.parse(::MyArgs)
+        val res = parser.parse(::CmdArgsParserTestArgs)
 
         res.onSuccess { args ->
             // Optionals
@@ -140,21 +140,21 @@ class CmdArgsParserTest {
             assertEquals(4.5, args.d)
             assertNull(args.i)
             assertNull(args.l)
-            assertEquals(MyArgs.MODE.EASY, args.s)
+            assertEquals(CmdArgsParserTestArgs.MODE.EASY, args.s)
 
             // Optional defaults
             assertEquals("0 Default value", args.o2)
             assertEquals(2.3, args.d2)
             assertEquals(99, args.i2)
             assertEquals(144, args.l2)
-            assertEquals(MyArgs.MODE.HARD, args.s2)
+            assertEquals(CmdArgsParserTestArgs.MODE.HARD, args.s2)
 
             // Required
             assertEquals("My required string", args.o3)
             assertEquals(32.0, args.d3)
             assertEquals(24, args.i3)
             assertEquals(1983, args.l3)
-            assertEquals(MyArgs.MODE.MEDIUM, args.s3)
+            assertEquals(CmdArgsParserTestArgs.MODE.MEDIUM, args.s3)
 
             // Flags
             assert(args.f)
@@ -173,7 +173,7 @@ class CmdArgsParserTest {
     }
 
     @Test
-    fun execWithDelimiters() {
+    fun parsesSuccessfullyWithDelimiters() {
         val args = arrayOf(
             // Optionals
             "-o=optional string value",
@@ -200,7 +200,7 @@ class CmdArgsParserTest {
         )
 
         val parser = CmdArgsParser(args, "_CmdArgsParserTest")
-        val res = parser.parse(::MyArgs)
+        val res = parser.parse(::CmdArgsParserTestArgs)
 
         res.onSuccess { args ->
             // Optionals
@@ -208,21 +208,21 @@ class CmdArgsParserTest {
             assertEquals(4.5, args.d)
             assertNull(args.i)
             assertNull(args.l)
-            assertEquals(MyArgs.MODE.EASY, args.s)
+            assertEquals(CmdArgsParserTestArgs.MODE.EASY, args.s)
 
             // Optional defaults
             assertEquals("0 Default value", args.o2)
             assertEquals(2.3, args.d2)
             assertEquals(99, args.i2)
             assertEquals(144, args.l2)
-            assertEquals(MyArgs.MODE.HARD, args.s2)
+            assertEquals(CmdArgsParserTestArgs.MODE.HARD, args.s2)
 
             // Required
             assertEquals("My required string", args.o3)
             assertEquals(32.0, args.d3)
             assertEquals(24, args.i3)
             assertEquals(1983, args.l3)
-            assertEquals(MyArgs.MODE.MEDIUM, args.s3)
+            assertEquals(CmdArgsParserTestArgs.MODE.MEDIUM, args.s3)
 
             // Flags
             assert(args.f)
