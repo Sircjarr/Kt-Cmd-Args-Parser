@@ -1,4 +1,4 @@
-package lib.lib_args_parse
+package lib.lib_args_parse.exception
 
 class CmdArgsParserInitializationException(e: Exception) : IllegalArgumentException(e)
 class MalformedArgsException(e: Exception) : IllegalArgumentException(e)

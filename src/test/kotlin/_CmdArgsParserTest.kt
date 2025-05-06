@@ -1,5 +1,5 @@
-import lib.lib_args_parse.CmdArgHelpConfig
-import lib.lib_args_parse.CmdArgHelpConfigHolder
+import lib.lib_args_parse.help.CmdArgHelpConfig
+import lib.lib_args_parse.help.CmdArgHelpConfigHolder
 import lib.lib_args_parse.CmdArgsParser
 import kotlin.test.*
 

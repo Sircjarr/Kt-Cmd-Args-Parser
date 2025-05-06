@@ -1,8 +1,8 @@
 package lib.lib_args_parse.help
 
-import lib.lib_args_parse.CmdArgNonNull
-import lib.lib_args_parse.CmdArgNullable
-import lib.lib_args_parse.Subcommand
+import lib.lib_args_parse.model.CmdArgNonNull
+import lib.lib_args_parse.model.CmdArgNullable
+import lib.lib_args_parse.model.Subcommand
 
 private const val CHAR_TABLE_SEPARATOR = ":"
 
