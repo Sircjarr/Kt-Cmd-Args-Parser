@@ -39,7 +39,7 @@ class CmdArgsParser(
 
     private var parseResult: Result<Any>? = null
 
-    private val argKeyRegex = "^--?[a-zA-Z][a-zA-Z-]*$".toRegex()
+    private val argKeyRegex = "^-([a-zA-Z]|-[a-zA-Z][a-zA-Z-]*)$".toRegex()
     private val helpRegex = "help|--help".toRegex()
     private val versionRegex = "version|--version".toRegex()
     private val quitRegex = "q|quit|exit|--quit|--exit".toRegex()
