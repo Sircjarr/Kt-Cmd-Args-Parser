@@ -62,4 +62,58 @@ class CmdArgsPositionalsTest {
             assert(it is MalformedArgsException)
         }
     }
+
+    @Test
+    fun delimiterWorks() {
+        class TestArgs(parser: CmdArgsParser) {
+            val w: String by parser.requiredArg("-v", valueLabel = "VAL", hint = "")
+
+            val x: String by parser.positionalArg(valueLabel = "X", hint = "")
+            val y: Int by parser.positionalArg(valueLabel = "Y", hint = "") { it.toInt() }
+            val z: Double by parser.positionalArg(valueLabel = "Z", hint = "") { it.toDouble() }
+        }
+
+        CmdArgsParser(arrayOf("-v=value", "--", "-t", "9999", "22.9"), "CmdArgsParserInitializationExceptionTest.kt").parse(::TestArgs).onSuccess {
+            assertEquals("value", it.w)
+            assertEquals("-t", it.x)
+            assertEquals(9999, it.y)
+            assertEquals(22.9, it.z)
+        }.onFailure {
+            fail("Parse should succeed")
+        }
+    }
+
+    @Test
+    fun missingDelimiterFails() {
+        class TestArgs(parser: CmdArgsParser) {
+            val w: String by parser.requiredArg("-v", valueLabel = "VAL", hint = "")
+
+            val x: String by parser.positionalArg(valueLabel = "X", hint = "")
+            val y: Int by parser.positionalArg(valueLabel = "Y", hint = "") { it.toInt() }
+            val z: Double by parser.positionalArg(valueLabel = "Z", hint = "") { it.toDouble() }
+        }
+
+        CmdArgsParser(arrayOf("-v=value", "-t", "9999", "22.9"), "CmdArgsParserInitializationExceptionTest.kt").parse(::TestArgs).onSuccess {
+            fail("Parse should fail")
+        }.onFailure {
+            assert(it is MalformedArgsException)
+        }
+    }
+
+    @Test
+    fun delimiterAndMissingPositionalFails() {
+        class TestArgs(parser: CmdArgsParser) {
+            val w: String by parser.requiredArg("-v", valueLabel = "VAL", hint = "")
+
+            val x: String by parser.positionalArg(valueLabel = "X", hint = "")
+            val y: Int by parser.positionalArg(valueLabel = "Y", hint = "") { it.toInt() }
+            val z: Double by parser.positionalArg(valueLabel = "Z", hint = "") { it.toDouble() }
+        }
+
+        CmdArgsParser(arrayOf("-v=value", "--", "-t", "9999"), "CmdArgsParserInitializationExceptionTest.kt").parse(::TestArgs).onSuccess {
+            fail("Parse should fail")
+        }.onFailure {
+            assert(it is MalformedArgsException)
+        }
+    }
 }

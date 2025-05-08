@@ -20,6 +20,34 @@ class CmdArgsParserInitializationExceptionTest {
     }
 
     @Test
+    fun optionalKeyDash() {
+        class TestArgs(parser: CmdArgsParser) {
+            val x: Int? by parser.optionalArg("-", valueLabel = "", hint = "") { it.toInt() }
+        }
+
+        try {
+            CmdArgsParser(arrayOf(""), "CmdArgsParserInitializationExceptionTest.kt").parse(::TestArgs)
+            fail("Exception not thrown")
+        } catch (e: CmdArgsParserInitializationException) {
+            print(e.toString())
+        }
+    }
+
+    @Test
+    fun optionalKeyDelimiter() {
+        class TestArgs(parser: CmdArgsParser) {
+            val x: Int? by parser.optionalArg("--", valueLabel = "", hint = "") { it.toInt() }
+        }
+
+        try {
+            CmdArgsParser(arrayOf(""), "CmdArgsParserInitializationExceptionTest.kt").parse(::TestArgs)
+            fail("Exception not thrown")
+        } catch (e: CmdArgsParserInitializationException) {
+            print(e.toString())
+        }
+    }
+
+    @Test
     fun optionalDefaultKey() {
         class TestArgs(parser: CmdArgsParser) {
             val x: Int? by parser.optionalArg("---v", default = 2, valueLabel = "", hint = "") { it.toInt() }

@@ -299,7 +299,7 @@ class CmdArgsParser(
         try {
             require(mapping.isNotEmpty()) { "key-value mapping must not be empty" }
             mapping.keys.forEach {
-                require(!it.isKeyArg()) { "map key arg $it must match not match the key arg pattern" }
+                require(!it.startsWith("-")) { "map key arg $it must not match the key arg pattern" }
             }
         } catch (e: Exception) {
             throw CmdArgsParserInitializationException(e)
@@ -448,7 +448,9 @@ class CmdArgsParser(
                         when {
                             arg == k -> {
                                 require(args.size > i + 1) { "No value specified for arg $k" }
-                                optsKeyValueMap[arg] = args[i + 1]
+                                val value = args[i + 1]
+                                require(!value.startsWith("-")) { "No value specified for arg $k" }
+                                optsKeyValueMap[arg] = value
                                 i += 2
                             }
 
@@ -471,13 +473,13 @@ class CmdArgsParser(
         if (positionalArgs.size == positionals.size) {
             for (p in positionals) {
                 positionalIndexMap[p.valueLabel] = i
-                require(!args[i].isKeyArg() && args[i].isNotBlank()) { "Positional ${p.valueLabel} with value ${args[i]} does not match the expected format" }
+                require(args[i].isNotBlank()) { "Positional ${p.valueLabel} with value ${args[i]} does not match the expected format" }
                 i++
             }
         } else if (positionalArgs.size > positionals.size) {
             throw IllegalArgumentException("Unexpected arg: ${positionalArgs.first()}")
         } else {
-            val missingPos = positionals.subList(args.lastIndex, positionals.size)
+            val missingPos = positionals.subList(positionalArgs.size, positionals.size)
             throw IllegalArgumentException("Positional arg(s) not provided: ${missingPos.joinToString { it.valueLabel }}")
         }
     }
