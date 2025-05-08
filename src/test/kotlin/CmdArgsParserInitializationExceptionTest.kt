@@ -48,6 +48,20 @@ class CmdArgsParserInitializationExceptionTest {
     }
 
     @Test
+    fun noKeysProvided() {
+        class TestArgs(parser: CmdArgsParser) {
+            val x: Int by parser.requiredArg(valueLabel = "", hint = "") { it.toInt() }
+        }
+
+        try {
+            CmdArgsParser(arrayOf(""), "CmdArgsParserInitializationExceptionTest.kt").parse(::TestArgs)
+            fail("Exception not thrown")
+        } catch (e: CmdArgsParserInitializationException) {
+            print(e.toString())
+        }
+    }
+
+    @Test
     fun requiredMap() {
         class TestArgs(parser: CmdArgsParser) {
             val x: Int by parser.requiredMapArg(" ", map = mapOf("1" to 1), valueLabel = "", hint = "")

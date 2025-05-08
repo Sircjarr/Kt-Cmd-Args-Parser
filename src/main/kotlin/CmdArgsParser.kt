@@ -285,6 +285,7 @@ class CmdArgsParser(
 
     private fun validateArgKeys(keys: List<String>) {
         try {
+            require(keys.isNotEmpty()) { "No args keys provided" }
             require(keys.all { it.isKeyArg() }) { "${getKeysLogTag(keys)} args keys must match key arg pattern" }
             require(keys.all { !optsKeyValueMap.containsKey(it) }) { "${getKeysLogTag(keys)} key already declared" }
             require(keys.none { it.isBuiltInCommand() }) { "${getKeysLogTag(keys)} key contains a builtin command" }
