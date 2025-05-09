@@ -365,7 +365,7 @@ class CmdArgsParser(
             validateArgsListFormat()
         } catch (e: Exception) {
             val parseEx = CmdArgsMalformedException(e)
-            printErrorAndHelp(e)
+            printParseError(e)
             return Result.failure(parseEx)
         }
 
@@ -374,14 +374,13 @@ class CmdArgsParser(
             Result.success(parsedArgs)
         } catch (e: Exception) {
             val parseEx = CmdArgsParseException(e)
-            printErrorAndHelp(e)
+            printParseError(e)
             Result.failure(parseEx)
         }
     }
 
-    private fun printErrorAndHelp(e: Exception) {
-        println(e.toString())
-        printHelp()
+    private fun printParseError(e: Exception) {
+        println("error: ${e.message}")
     }
 
     private fun printVersion() {
