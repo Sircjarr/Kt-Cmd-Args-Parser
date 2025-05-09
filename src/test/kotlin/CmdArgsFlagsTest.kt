@@ -1,4 +1,5 @@
 import lib.lib_args_parse.CmdArgsParser
+import lib.lib_args_parse.exception.CmdArgsMalformedException
 import org.junit.jupiter.api.Assertions.assertFalse
 import kotlin.test.Test
 import kotlin.test.assertTrue
@@ -56,5 +57,35 @@ class CmdArgsFlagsTest {
                 assertFalse(it.x)
                 assertTrue(it.y)
             }.onFailure { fail("Should parse successfully") }
+    }
+
+    @Test
+    fun stackedFlagsDuplicate() {
+        class MyArgs(parser: CmdArgsParser) {
+            val w: Boolean by parser.flagArg("-w", hint = "")
+            val x: Boolean by parser.flagArg("-x", hint = "", default = true)
+            val y: Boolean by parser.flagArg("-y", hint = "")
+        }
+
+        CmdArgsParser(arrayOf("-wxxy"), "CmdArgsFlagsTest.kt").parse(::MyArgs)
+            .onSuccess {
+                assertTrue(it.w)
+                assertFalse(it.x)
+                assertTrue(it.y)
+            }.onFailure { fail("Should parse successfully") }
+    }
+
+    @Test
+    fun unknownStackedFlagFails() {
+        class MyArgs(parser: CmdArgsParser) {
+            val w: Boolean by parser.flagArg("-w", hint = "")
+            val x: Boolean by parser.flagArg("-x", hint = "", default = true)
+            val y: Boolean by parser.flagArg("-y", hint = "")
+        }
+
+        CmdArgsParser(arrayOf("-wxzy"), "CmdArgsFlagsTest.kt").parse(::MyArgs)
+            .onFailure {
+                assert(it is CmdArgsMalformedException)
+            }.onSuccess { fail("Should fail parsing") }
     }
 }
