@@ -3,7 +3,7 @@ package lib.lib_args_parse
 import lib.lib_args_parse.exception.CmdArgsBuiltinCommandException
 import lib.lib_args_parse.exception.CmdArgsParseException
 import lib.lib_args_parse.exception.CmdArgsParserInitializationException
-import lib.lib_args_parse.exception.MalformedArgsException
+import lib.lib_args_parse.exception.CmdArgsMalformedException
 import lib.lib_args_parse.help.CmdArgHelpConfig
 import lib.lib_args_parse.help.CmdArgHelpConfigHolder
 import lib.lib_args_parse.help.CmdArgsParserHelpPrinter
@@ -364,7 +364,7 @@ class CmdArgsParser(
         try {
             validateArgsListFormat()
         } catch (e: Exception) {
-            val parseEx = MalformedArgsException(e)
+            val parseEx = CmdArgsMalformedException(e)
             printErrorAndHelp(e)
             return Result.failure(parseEx)
         }

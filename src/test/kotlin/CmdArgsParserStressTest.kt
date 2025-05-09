@@ -131,7 +131,7 @@ class CmdArgsParserTest {
             "noga.txt"
         )
 
-        val parser = CmdArgsParser(args, "_CmdArgsParserTest.kt")
+        val parser = CmdArgsParser(args, "CmdArgsParserStressTest.kt")
         val res = parser.parse(::CmdArgsParserTestArgs)
 
         res.onSuccess { args ->

@@ -1,5 +1,5 @@
 import lib.lib_args_parse.CmdArgsParser
-import lib.lib_args_parse.exception.MalformedArgsException
+import lib.lib_args_parse.exception.CmdArgsMalformedException
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.fail
@@ -53,13 +53,13 @@ class CmdArgsPositionalsTest {
         CmdArgsParser(arrayOf("-v=value", "test", "345"), "CmdArgsParserInitializationExceptionTest.kt").parse(::TestArgs).onSuccess {
             fail("Should fail parsing")
         }.onFailure {
-            assert(it is MalformedArgsException)
+            assert(it is CmdArgsMalformedException)
         }
 
         CmdArgsParser(arrayOf("-v=value", "test"), "CmdArgsParserInitializationExceptionTest.kt").parse(::TestArgs).onSuccess {
             fail("Should fail parsing")
         }.onFailure {
-            assert(it is MalformedArgsException)
+            assert(it is CmdArgsMalformedException)
         }
     }
 
@@ -96,7 +96,7 @@ class CmdArgsPositionalsTest {
         CmdArgsParser(arrayOf("-v=value", "-t", "9999", "22.9"), "CmdArgsParserInitializationExceptionTest.kt").parse(::TestArgs).onSuccess {
             fail("Parse should fail")
         }.onFailure {
-            assert(it is MalformedArgsException)
+            assert(it is CmdArgsMalformedException)
         }
     }
 
@@ -113,7 +113,7 @@ class CmdArgsPositionalsTest {
         CmdArgsParser(arrayOf("-v=value", "--", "-t", "9999"), "CmdArgsParserInitializationExceptionTest.kt").parse(::TestArgs).onSuccess {
             fail("Parse should fail")
         }.onFailure {
-            assert(it is MalformedArgsException)
+            assert(it is CmdArgsMalformedException)
         }
     }
 }

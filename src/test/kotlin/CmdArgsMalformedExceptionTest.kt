@@ -1,9 +1,9 @@
 import lib.lib_args_parse.CmdArgsParser
-import lib.lib_args_parse.exception.MalformedArgsException
+import lib.lib_args_parse.exception.CmdArgsMalformedException
 import kotlin.test.Test
 import kotlin.test.fail
 
-class MalformedArgsExceptionTest {
+class CmdArgsMalformedExceptionTest {
 
     @Test
     fun unexpectedArgThrowsException() {
@@ -17,7 +17,7 @@ class MalformedArgsExceptionTest {
         CmdArgsParser(arrayOf("--mode=e", "-vtest", "illegal_input", "-x345", "-z", "7.89"), "CmdArgsParserInitializationExceptionTest.kt").parse(::TestArgs).onSuccess {
             fail("Should fail parsing")
         }.onFailure {
-            assert(it is MalformedArgsException)
+            assert(it is CmdArgsMalformedException)
         }
     }
 
@@ -33,25 +33,25 @@ class MalformedArgsExceptionTest {
         CmdArgsParser(arrayOf("--mode=e", "-vtest", "-x", "-z", "7.89"), "CmdArgsParserInitializationExceptionTest.kt").parse(::TestArgs).onSuccess {
             fail("Should fail parsing")
         }.onFailure {
-            assert(it is MalformedArgsException)
+            assert(it is CmdArgsMalformedException)
         }
 
         CmdArgsParser(arrayOf("--mode=e", "-vtest", "-x345", "-z"), "CmdArgsParserInitializationExceptionTest.kt").parse(::TestArgs).onSuccess {
             fail("Should fail parsing")
         }.onFailure {
-            assert(it is MalformedArgsException)
+            assert(it is CmdArgsMalformedException)
         }
 
         CmdArgsParser(arrayOf("--mode=e", "-v", "-x345", "-z", "7.89"), "CmdArgsParserInitializationExceptionTest.kt").parse(::TestArgs).onSuccess {
             fail("Should fail parsing")
         }.onFailure {
-            assert(it is MalformedArgsException)
+            assert(it is CmdArgsMalformedException)
         }
 
         CmdArgsParser(arrayOf("-x345", "-v", "--mode=e", "-z", "7.89"), "CmdArgsParserInitializationExceptionTest.kt").parse(::TestArgs).onSuccess {
             fail("Should fail parsing")
         }.onFailure {
-            assert(it is MalformedArgsException)
+            assert(it is CmdArgsMalformedException)
         }
     }
 }
