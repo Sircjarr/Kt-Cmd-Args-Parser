@@ -6,6 +6,8 @@ import kotlin.test.*
 
 class FileEncryptorArgs(parser: CmdArgsParser): CmdArgHelpConfigHolder {
 
+    val flag: Boolean by parser.flagArg("--flag", hint = "Option not part of any subcommand")
+
     val encryptionArgs: EncryptionArgs? by parser.subparser("encrypt", ::EncryptionArgs)
     val decryptionArgs: DecryptionArgs? by parser.subparser("decrypt", ::DecryptionArgs)
 
@@ -125,6 +127,16 @@ class CmdArgsSubparserTest {
         )
         CmdArgsParser(args, "CmdArgsSubparserTest.kt").parse(::FileEncryptorArgs).onSuccess {
             fail("Usage should be printed")
+        }
+    }
+
+    @Test
+    fun processOptionNoSubcommand() {
+        val args = arrayOf(
+            "--flag"
+        )
+        CmdArgsParser(args, "CmdArgsSubparserTest.kt").parse(::FileEncryptorArgs).onSuccess {
+            assertTrue(it.flag)
         }
     }
 }

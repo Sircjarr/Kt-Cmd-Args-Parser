@@ -387,15 +387,13 @@ class CmdArgsParser(
         println(version)
     }
 
-    // Ensure stability for when you go to parse the sub args later in runtime
+    // Ensure subcommand stability
     private fun validateActiveSubCommand() {
         activeSubcommand!!.initializer!!.invoke()
     }
 
-    /**
-     * Inspects each String in the args Array and checks that they are accounted for in the parsed CmdArgs
-     * In addition, checks all required and positional args are accounted for
-     */
+
+    // Inspects each String in the args Array and verifies format compliance with the declared CmdArgs
     private fun validateArgsListFormat() {
         var i = 0
         while (i < args.size) {
@@ -418,15 +416,11 @@ class CmdArgsParser(
                         optsKeyValueMap[arg] = "true"
                         i++
                     } else {
-                        val k = findKeyInOptionals(arg)
+                        val k = requireKeyInOptionals(arg)
 
-                        if (k != null) {
-                            require(args.size > i + 1) { "No value specified for arg $k" }
-                            optsKeyValueMap[arg] = args[i + 1]
-                            i += 2
-                        } else {
-                            throw IllegalArgumentException("Arg not registered in optionals: $arg")
-                        }
+                        require(args.size > i + 1) { "No value specified for arg $k" }
+                        optsKeyValueMap[arg] = args[i + 1]
+                        i += 2
                     }
                 }
                 // -F | -FLAGS | -n 24 | -n24
@@ -442,7 +436,7 @@ class CmdArgsParser(
                             optsKeyValueMap["-$f"] = "true"
                         }
                     } else {
-                        val k = findKeyInOptionals(a)
+                        val k = requireKeyInOptionals(a)
 
                         when {
                             arg == k -> {
@@ -453,12 +447,12 @@ class CmdArgsParser(
                                 i += 2
                             }
 
-                            k != null && arg.length > k.length -> {
+                            arg.length > k.length -> {
                                 optsKeyValueMap[a] = arg.substring(2)
                                 i++
                             }
 
-                            else -> throw IllegalArgumentException("No key found for arg: $arg")
+                            else -> throw IllegalStateException("Invalid arg $arg and key $k")
                         }
                     }
                 }
@@ -487,7 +481,7 @@ class CmdArgsParser(
         return flags.any { flag -> flag.keys.any { it == argKey } }
     }
 
-    private fun findKeyInOptionals(arg: String): String? {
+    private fun requireKeyInOptionals(arg: String): String {
         for (opt in reqs) {
             for (k in opt.keys) {
                 if (k == arg) {
@@ -512,7 +506,7 @@ class CmdArgsParser(
             }
         }
 
-        return null
+        throw IllegalArgumentException("No key found for arg $arg")
     }
 
     private fun validateCmdArgValues() {
@@ -533,7 +527,7 @@ class CmdArgsParser(
         return matches(helpRegex) || matches(versionRegex) || matches(quitRegex)
     }
 
-    fun printHelp() {
+    private fun printHelp() {
         CmdArgsParserHelpPrinter.print(
             programName,
             cmdArgHelpConfig?.epilogue,

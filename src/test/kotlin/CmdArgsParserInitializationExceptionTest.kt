@@ -145,4 +145,20 @@ class CmdArgsParserInitializationExceptionTest {
             print(e.toString())
         }
     }
+
+    @Test
+    fun requiredValidSubcommand() {
+        class SubcommandTestArgs(parser: CmdArgsParser)
+
+        class TestArgs(parser: CmdArgsParser) {
+            val x: SubcommandTestArgs? by parser.subparser("encrypt-8", ::SubcommandTestArgs)
+        }
+
+        try {
+            CmdArgsParser(arrayOf(""), "CmdArgsParserInitializationExceptionTest.kt").parse(::TestArgs)
+            fail("Exception not thrown")
+        } catch (e: CmdArgsParserInitializationException) {
+            print(e.toString())
+        }
+    }
 }
