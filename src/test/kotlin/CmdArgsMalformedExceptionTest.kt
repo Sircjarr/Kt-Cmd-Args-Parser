@@ -54,4 +54,20 @@ class CmdArgsMalformedExceptionTest {
             assert(it is CmdArgsMalformedException)
         }
     }
+
+    @Test
+    fun noValueDefinedBeforePosDelimThrowsException() {
+        class TestArgs(parser: CmdArgsParser) {
+            val w: String by parser.requiredMapArg("--mode", map = mapOf("e" to "easy"), valueLabel = "X", hint = "")
+            val x: String by parser.requiredArg("-v", valueLabel = "X", hint = "")
+            val y: Int? by parser.optionalArg("-x", valueLabel = "Y", hint = "") { it.toInt() }
+            val z: String by parser.positionalArg(valueLabel = "Z", hint = "")
+        }
+
+        CmdArgsParser(arrayOf("--mode=e", "-vtest", "-x", "--", "-z", "7.89"), "CmdArgsParserInitializationExceptionTest.kt").parse(::TestArgs).onSuccess {
+            fail("Should fail parsing")
+        }.onFailure {
+            assert(it is CmdArgsMalformedException)
+        }
+    }
 }
