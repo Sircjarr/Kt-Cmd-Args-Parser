@@ -19,7 +19,7 @@ An easy-to-use command-line argument parser for Kotlin apps. Interprets an array
 # Usage example
 
 # Argument nomenclature
-**Options**: Encompass arguments before positionals including: requireds, optionals, and flags
+**Options**: Generic term for the args defined before the positional args. Options encompass: requireds, optionals, and flag args.
 
 **Optionals**: Key-value option that may or may not be declared in `args` and may or may not have a default fallback value
 
@@ -30,6 +30,14 @@ An easy-to-use command-line argument parser for Kotlin apps. Interprets an array
 **Mapping**: Key-value option with a restricted set of values. Can be made either required or optional.
 
 **Positional**: Argument(s) found after the option declarations in `args`. Their 'position' in `args` matters relative to thier declaration order.
+
+# Defining arguments
+#### Optionals
+#### Requireds
+#### Flags
+#### Mappings
+
+# Subcommands
 
 # Formatting `--help` output
 Formatting the `--help` output is limited in the project's current state. However, you may set a prologue or an epilogue statement like so: 
