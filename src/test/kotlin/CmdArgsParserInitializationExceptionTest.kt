@@ -151,7 +151,7 @@ class CmdArgsParserInitializationExceptionTest {
         class SubcommandTestArgs(parser: CmdArgsParser)
 
         class TestArgs(parser: CmdArgsParser) {
-            val x: SubcommandTestArgs? by parser.subparser("encrypt-8", ::SubcommandTestArgs)
+            val x: SubcommandTestArgs? by parser.subparser("encrypt-8", "", ::SubcommandTestArgs)
         }
 
         try {

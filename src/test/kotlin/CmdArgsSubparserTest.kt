@@ -8,8 +8,8 @@ class FileEncryptorArgs(parser: CmdArgsParser): CmdArgHelpConfigHolder {
 
     val flag: Boolean by parser.flagArg("--flag", help = "Option not part of any subcommand")
 
-    val encryptionArgs: EncryptionArgs? by parser.subparser("encrypt", ::EncryptionArgs)
-    val decryptionArgs: DecryptionArgs? by parser.subparser("decrypt", ::DecryptionArgs)
+    val encryptionArgs: EncryptionArgs? by parser.subparser("encrypt", "encryption mode hint", ::EncryptionArgs)
+    val decryptionArgs: DecryptionArgs? by parser.subparser("decrypt", "decryption mode hint", ::DecryptionArgs)
 
     override val cmdArgHelpConfig: CmdArgHelpConfig
         get() = CmdArgHelpConfig(

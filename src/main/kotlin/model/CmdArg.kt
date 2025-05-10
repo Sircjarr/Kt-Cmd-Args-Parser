@@ -86,5 +86,6 @@ sealed class CmdArgNonNull<T>(
 }
 
 class Subcommand<T>(
+    val help: String,
     initializer: () -> T?
 ) : SynchronizedLazyImpl<T?>(initializer)

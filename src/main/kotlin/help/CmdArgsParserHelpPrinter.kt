@@ -45,7 +45,7 @@ internal object CmdArgsParserHelpPrinter {
 
         tuples.add(listOf("Subcommands:"))
         subcommands.forEach { k, v ->
-            tuples.add(listOf(k))
+            tuples.add(listOf(k,  ":", v.help))
         }
     }
 

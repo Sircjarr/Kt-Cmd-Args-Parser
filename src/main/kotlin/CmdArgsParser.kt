@@ -254,19 +254,19 @@ class CmdArgsParser(
         }
     }
 
-    fun <T> subparser(subcommand: String, creator: (CmdArgsParser) -> T): Subcommand<T?> {
+    fun <T> subparser(subcommand: String, help: String, creator: (CmdArgsParser) -> T): Subcommand<T?> {
         validateSubcommand(subcommand)
 
         return if (args.firstOrNull() == subcommand) {
             val subparser = CmdArgsParser(args.sliceArray(1..args.lastIndex), "$programName $subcommand", version)
-            subparsers[subcommand] = Subcommand {
+            subparsers[subcommand] = Subcommand(help) {
                 subparser.parse(creator).getOrThrow()
             }
             activeSubcommand = subparsers[subcommand]!!
             activeSubcommand as Subcommand<T?>
         } else {
             val subparser = CmdArgsParser(args, "$programName $subcommand", version)
-            subparsers[subcommand] = Subcommand { null }
+            subparsers[subcommand] = Subcommand(help) { null }
             creator(subparser)
             subparsers[subcommand]!! as Subcommand<T?>
         }
