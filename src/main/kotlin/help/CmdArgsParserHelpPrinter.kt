@@ -86,7 +86,7 @@ internal object CmdArgsParserHelpPrinter {
                 append("$flagString\n")
             }
             if (posString.isNotEmpty()) {
-                append(posString)
+                append("[--] $posString")
             }
             if (subcommands.isNotEmpty()) {
                 append("SUBCOMMAND [ARGS]")
