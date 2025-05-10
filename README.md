@@ -1,5 +1,5 @@
 # Description
-An easy-to-use command-line argument parser for Kotlin apps. Interprets an array of `String` arguments formatted in a familiar syntax and serializes a valid, stable object of arguments to be coveniently read in any given program.
+An easy-to-use command-line argument parser for Kotlin apps. Interprets an `Array<String>`, `args`, formatted in a familiar syntax and serializes a valid, stable object of arguments to be coveniently read in any given program.
 
 #### Features
 * Declare required, optional, flag, and positional args
