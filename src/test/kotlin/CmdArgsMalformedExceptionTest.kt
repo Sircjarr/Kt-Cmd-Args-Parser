@@ -8,10 +8,10 @@ class CmdArgsMalformedExceptionTest {
     @Test
     fun unexpectedArgThrowsException() {
         class TestArgs(parser: CmdArgsParser) {
-            val w: String by parser.requiredMapArg("--mode", map = mapOf("e" to "easy"), valueLabel = "X", hint = "")
-            val x: String by parser.requiredArg("-v", valueLabel = "X", hint = "")
-            val y: Int? by parser.optionalArg("-x", valueLabel = "Y", hint = "") { it.toInt() }
-            val z: Double by parser.requiredArg("-z", valueLabel = "Z", hint = "") { it.toDouble() }
+            val w: String by parser.requiredMapArg("--mode", map = mapOf("e" to "easy"), valueLabel = "X", help = "")
+            val x: String by parser.requiredArg("-v", valueLabel = "X", help = "")
+            val y: Int? by parser.optionalArg("-x", valueLabel = "Y", help = "") { it.toInt() }
+            val z: Double by parser.requiredArg("-z", valueLabel = "Z", help = "") { it.toDouble() }
         }
 
         CmdArgsParser(arrayOf("--mode=e", "-vtest", "illegal_input", "-x345", "-z", "7.89"), "CmdArgsParserInitializationExceptionTest.kt").parse(::TestArgs).onSuccess {
@@ -24,10 +24,10 @@ class CmdArgsMalformedExceptionTest {
     @Test
     fun noValueDefinedThrowsException() {
         class TestArgs(parser: CmdArgsParser) {
-            val w: String by parser.requiredMapArg("--mode", map = mapOf("e" to "easy"), valueLabel = "X", hint = "")
-            val x: String by parser.requiredArg("-v", valueLabel = "X", hint = "")
-            val y: Int? by parser.optionalArg("-x", valueLabel = "Y", hint = "") { it.toInt() }
-            val z: Double by parser.requiredArg("-z", valueLabel = "Z", hint = "") { it.toDouble() }
+            val w: String by parser.requiredMapArg("--mode", map = mapOf("e" to "easy"), valueLabel = "X", help = "")
+            val x: String by parser.requiredArg("-v", valueLabel = "X", help = "")
+            val y: Int? by parser.optionalArg("-x", valueLabel = "Y", help = "") { it.toInt() }
+            val z: Double by parser.requiredArg("-z", valueLabel = "Z", help = "") { it.toDouble() }
         }
 
         CmdArgsParser(arrayOf("--mode=e", "-vtest", "-x", "-z", "7.89"), "CmdArgsParserInitializationExceptionTest.kt").parse(::TestArgs).onSuccess {
@@ -58,10 +58,10 @@ class CmdArgsMalformedExceptionTest {
     @Test
     fun noValueDefinedBeforePosDelimThrowsException() {
         class TestArgs(parser: CmdArgsParser) {
-            val w: String by parser.requiredMapArg("--mode", map = mapOf("e" to "easy"), valueLabel = "X", hint = "")
-            val x: String by parser.requiredArg("-v", valueLabel = "X", hint = "")
-            val y: Int? by parser.optionalArg("-x", valueLabel = "Y", hint = "") { it.toInt() }
-            val z: String by parser.positionalArg(valueLabel = "Z", hint = "")
+            val w: String by parser.requiredMapArg("--mode", map = mapOf("e" to "easy"), valueLabel = "X", help = "")
+            val x: String by parser.requiredArg("-v", valueLabel = "X", help = "")
+            val y: Int? by parser.optionalArg("-x", valueLabel = "Y", help = "") { it.toInt() }
+            val z: String by parser.positionalArg(valueLabel = "Z", help = "")
         }
 
         CmdArgsParser(arrayOf("--mode=e", "-vtest", "-x", "--", "-z", "7.89"), "CmdArgsParserInitializationExceptionTest.kt").parse(::TestArgs).onSuccess {

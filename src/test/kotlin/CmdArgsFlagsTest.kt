@@ -10,8 +10,8 @@ class CmdArgsFlagsTest {
     @Test
     fun singleFlag() {
         class MyArgs(parser: CmdArgsParser) {
-            val x: Boolean by parser.flagArg("-f", "--flag", hint = "")
-            val y: String? by parser.optionalArg("-v", hint = "", valueLabel = "")
+            val x: Boolean by parser.flagArg("-f", "--flag", help = "")
+            val y: String? by parser.optionalArg("-v", help = "", valueLabel = "")
         }
 
         CmdArgsParser(arrayOf("-v=boga"), "CmdArgsFlagsTest.kt").parse(::MyArgs)
@@ -28,8 +28,8 @@ class CmdArgsFlagsTest {
     @Test
     fun singleFlagWithDefault() {
         class MyArgs(parser: CmdArgsParser) {
-            val x: Boolean by parser.flagArg("-f", "--no-flag", hint = "", default = true)
-            val y: String? by parser.optionalArg("-v", hint = "", valueLabel = "")
+            val x: Boolean by parser.flagArg("-f", "--no-flag", help = "", default = true)
+            val y: String? by parser.optionalArg("-v", help = "", valueLabel = "")
         }
 
         CmdArgsParser(arrayOf("-v=boga"), "CmdArgsFlagsTest.kt").parse(::MyArgs)
@@ -46,9 +46,9 @@ class CmdArgsFlagsTest {
     @Test
     fun stackedFlags() {
         class MyArgs(parser: CmdArgsParser) {
-            val w: Boolean by parser.flagArg("-w", hint = "")
-            val x: Boolean by parser.flagArg("-x", hint = "", default = true)
-            val y: Boolean by parser.flagArg("-y", hint = "")
+            val w: Boolean by parser.flagArg("-w", help = "")
+            val x: Boolean by parser.flagArg("-x", help = "", default = true)
+            val y: Boolean by parser.flagArg("-y", help = "")
         }
 
         CmdArgsParser(arrayOf("-wxy"), "CmdArgsFlagsTest.kt").parse(::MyArgs)
@@ -62,9 +62,9 @@ class CmdArgsFlagsTest {
     @Test
     fun stackedFlagsDuplicate() {
         class MyArgs(parser: CmdArgsParser) {
-            val w: Boolean by parser.flagArg("-w", hint = "")
-            val x: Boolean by parser.flagArg("-x", hint = "", default = true)
-            val y: Boolean by parser.flagArg("-y", hint = "")
+            val w: Boolean by parser.flagArg("-w", help = "")
+            val x: Boolean by parser.flagArg("-x", help = "", default = true)
+            val y: Boolean by parser.flagArg("-y", help = "")
         }
 
         CmdArgsParser(arrayOf("-wxxy"), "CmdArgsFlagsTest.kt").parse(::MyArgs)
@@ -78,9 +78,9 @@ class CmdArgsFlagsTest {
     @Test
     fun unknownStackedFlagFails() {
         class MyArgs(parser: CmdArgsParser) {
-            val w: Boolean by parser.flagArg("-w", hint = "")
-            val x: Boolean by parser.flagArg("-x", hint = "", default = true)
-            val y: Boolean by parser.flagArg("-y", hint = "")
+            val w: Boolean by parser.flagArg("-w", help = "")
+            val x: Boolean by parser.flagArg("-x", help = "", default = true)
+            val y: Boolean by parser.flagArg("-y", help = "")
         }
 
         CmdArgsParser(arrayOf("-wxzy"), "CmdArgsFlagsTest.kt").parse(::MyArgs)

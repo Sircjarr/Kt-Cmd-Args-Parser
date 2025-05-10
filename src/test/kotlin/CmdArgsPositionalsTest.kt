@@ -9,7 +9,7 @@ class CmdArgsPositionalsTest {
     @Test
     fun singlePositionalParsed() {
         class TestArgs(parser: CmdArgsParser) {
-            val x: String by parser.positionalArg(valueLabel = "", hint = "")
+            val x: String by parser.positionalArg(valueLabel = "", help = "")
         }
 
         CmdArgsParser(arrayOf("hello_world"), "CmdArgsParserInitializationExceptionTest.kt").parse(::TestArgs).onSuccess {
@@ -22,11 +22,11 @@ class CmdArgsPositionalsTest {
     @Test
     fun multiplePositionalsParsed() {
         class TestArgs(parser: CmdArgsParser) {
-            val w: String by parser.requiredMapArg("--mode", map = mapOf("e" to "easy"), valueLabel = "X", hint = "")
+            val w: String by parser.requiredMapArg("--mode", map = mapOf("e" to "easy"), valueLabel = "X", help = "")
 
-            val x: String by parser.positionalArg(valueLabel = "X", hint = "")
-            val y: Int by parser.positionalArg(valueLabel = "Y", hint = "") { it.toInt() }
-            val z: Double by parser.positionalArg(valueLabel = "Z", hint = "") { it.toDouble() }
+            val x: String by parser.positionalArg(valueLabel = "X", help = "")
+            val y: Int by parser.positionalArg(valueLabel = "Y", help = "") { it.toInt() }
+            val z: Double by parser.positionalArg(valueLabel = "Z", help = "") { it.toDouble() }
         }
 
         CmdArgsParser(arrayOf("--mode=e", "test", "345", "29.87"), "CmdArgsParserInitializationExceptionTest.kt").parse(::TestArgs).onSuccess {
@@ -43,11 +43,11 @@ class CmdArgsPositionalsTest {
     @Test
     fun missingPositionalThrowsException() {
         class TestArgs(parser: CmdArgsParser) {
-            val w: String by parser.requiredArg("-v", valueLabel = "VAL", hint = "")
+            val w: String by parser.requiredArg("-v", valueLabel = "VAL", help = "")
 
-            val x: String by parser.positionalArg(valueLabel = "X", hint = "")
-            val y: Int by parser.positionalArg(valueLabel = "Y", hint = "") { it.toInt() }
-            val z: Double by parser.positionalArg(valueLabel = "Z", hint = "") { it.toDouble() }
+            val x: String by parser.positionalArg(valueLabel = "X", help = "")
+            val y: Int by parser.positionalArg(valueLabel = "Y", help = "") { it.toInt() }
+            val z: Double by parser.positionalArg(valueLabel = "Z", help = "") { it.toDouble() }
         }
 
         CmdArgsParser(arrayOf("-v=value", "test", "345"), "CmdArgsParserInitializationExceptionTest.kt").parse(::TestArgs).onSuccess {
@@ -66,11 +66,11 @@ class CmdArgsPositionalsTest {
     @Test
     fun delimiterWorks() {
         class TestArgs(parser: CmdArgsParser) {
-            val w: String by parser.requiredArg("-v", valueLabel = "VAL", hint = "")
+            val w: String by parser.requiredArg("-v", valueLabel = "VAL", help = "")
 
-            val x: String by parser.positionalArg(valueLabel = "X", hint = "")
-            val y: Int by parser.positionalArg(valueLabel = "Y", hint = "") { it.toInt() }
-            val z: Double by parser.positionalArg(valueLabel = "Z", hint = "") { it.toDouble() }
+            val x: String by parser.positionalArg(valueLabel = "X", help = "")
+            val y: Int by parser.positionalArg(valueLabel = "Y", help = "") { it.toInt() }
+            val z: Double by parser.positionalArg(valueLabel = "Z", help = "") { it.toDouble() }
         }
 
         CmdArgsParser(arrayOf("-v=value", "--", "-t", "9999", "22.9"), "CmdArgsParserInitializationExceptionTest.kt").parse(::TestArgs).onSuccess {
@@ -86,11 +86,11 @@ class CmdArgsPositionalsTest {
     @Test
     fun missingDelimiterFails() {
         class TestArgs(parser: CmdArgsParser) {
-            val w: String by parser.requiredArg("-v", valueLabel = "VAL", hint = "")
+            val w: String by parser.requiredArg("-v", valueLabel = "VAL", help = "")
 
-            val x: String by parser.positionalArg(valueLabel = "X", hint = "")
-            val y: Int by parser.positionalArg(valueLabel = "Y", hint = "") { it.toInt() }
-            val z: Double by parser.positionalArg(valueLabel = "Z", hint = "") { it.toDouble() }
+            val x: String by parser.positionalArg(valueLabel = "X", help = "")
+            val y: Int by parser.positionalArg(valueLabel = "Y", help = "") { it.toInt() }
+            val z: Double by parser.positionalArg(valueLabel = "Z", help = "") { it.toDouble() }
         }
 
         CmdArgsParser(arrayOf("-v=value", "-t", "9999", "22.9"), "CmdArgsParserInitializationExceptionTest.kt").parse(::TestArgs).onSuccess {
@@ -103,11 +103,11 @@ class CmdArgsPositionalsTest {
     @Test
     fun delimiterAndMissingPositionalFails() {
         class TestArgs(parser: CmdArgsParser) {
-            val w: String by parser.requiredArg("-v", valueLabel = "VAL", hint = "")
+            val w: String by parser.requiredArg("-v", valueLabel = "VAL", help = "")
 
-            val x: String by parser.positionalArg(valueLabel = "X", hint = "")
-            val y: Int by parser.positionalArg(valueLabel = "Y", hint = "") { it.toInt() }
-            val z: Double by parser.positionalArg(valueLabel = "Z", hint = "") { it.toDouble() }
+            val x: String by parser.positionalArg(valueLabel = "X", help = "")
+            val y: Int by parser.positionalArg(valueLabel = "Y", help = "") { it.toInt() }
+            val z: Double by parser.positionalArg(valueLabel = "Z", help = "") { it.toDouble() }
         }
 
         CmdArgsParser(arrayOf("-v=value", "--", "-t", "9999"), "CmdArgsParserInitializationExceptionTest.kt").parse(::TestArgs).onSuccess {

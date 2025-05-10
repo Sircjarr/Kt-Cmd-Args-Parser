@@ -6,7 +6,7 @@ import kotlin.test.*
 
 class FileEncryptorArgs(parser: CmdArgsParser): CmdArgHelpConfigHolder {
 
-    val flag: Boolean by parser.flagArg("--flag", hint = "Option not part of any subcommand")
+    val flag: Boolean by parser.flagArg("--flag", help = "Option not part of any subcommand")
 
     val encryptionArgs: EncryptionArgs? by parser.subparser("encrypt", ::EncryptionArgs)
     val decryptionArgs: DecryptionArgs? by parser.subparser("decrypt", ::DecryptionArgs)
@@ -21,12 +21,12 @@ class FileEncryptorArgs(parser: CmdArgsParser): CmdArgHelpConfigHolder {
     open class SharedArgs(parser: CmdArgsParser) {
         val srcFile: File by parser.positionalArg(
             valueLabel = "SRC",
-            hint = "Source file"
+            help = "Source file"
         ) { File(it) }
 
         val destFile: File by parser.positionalArg(
             valueLabel = "DEST",
-            hint = "Destination file"
+            help = "Destination file"
         ) { File(it) }
     }
 
@@ -34,13 +34,13 @@ class FileEncryptorArgs(parser: CmdArgsParser): CmdArgHelpConfigHolder {
         val encFileExcludeRegex: Regex? by subparser.optionalArg(
             "-f", "--enc-filereg",
             valueLabel = "FILE_EXCLUDE_REGEX",
-            hint = "Exclude file regex for encryption"
+            help = "Exclude file regex for encryption"
         ) { it.toRegex() }
 
         val encDirExcludeRegex: Regex? by subparser.optionalArg(
             "-d", "--enc-dirreg",
             valueLabel = "DIR_EXCLUDE_REGEX",
-            hint = "Exclude directory regex for encryption"
+            help = "Exclude directory regex for encryption"
         ) { it.toRegex() }
 
         override val cmdArgHelpConfig: CmdArgHelpConfig

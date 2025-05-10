@@ -48,7 +48,7 @@ class CmdArgsParser(
     fun <T> optionalArg(
         vararg keys: String,
         valueLabel: String,
-        hint: String,
+        help: String,
         initializer: (String) -> T = { it as T }
     ): CmdArgNullable.KeyValue.Single<T?> {
 
@@ -62,7 +62,7 @@ class CmdArgsParser(
                     initializer(v)
                 } else null
             },
-            hint = hint,
+            help = help,
             valueLabel = valueLabel,
             keys = keys.toList().toTypedArray()
         ).also {
@@ -74,7 +74,7 @@ class CmdArgsParser(
         vararg keys: String,
         default: T,
         valueLabel: String,
-        hint: String,
+        help: String,
         initializer: (String) -> T = { it as T }
     ): CmdArgNonNull.KeyValue.Single<T> {
 
@@ -88,7 +88,7 @@ class CmdArgsParser(
                     initializer(v)
                 } else default
             },
-            hint = hint,
+            help = help,
             valueLabel = valueLabel,
             keys = keys.toList().toTypedArray(),
             default = default
@@ -100,7 +100,7 @@ class CmdArgsParser(
     fun <T> requiredArg(
         vararg keys: String,
         valueLabel: String,
-        hint: String,
+        help: String,
         initializer: (String) -> T = { it as T }
     ): CmdArgNonNull.KeyValue.Single<T> {
 
@@ -112,7 +112,7 @@ class CmdArgsParser(
                 requireNotNull(v) { "${getKeysLogTag(keys.toList())} Required value not found" }
                 initializer(v)
             },
-            hint = hint,
+            help = help,
             valueLabel = valueLabel,
             keys = keys.toList().toTypedArray(),
             default = null
@@ -124,7 +124,7 @@ class CmdArgsParser(
     fun <T> optionalMappedArg(
         vararg keys: String,
         valueLabel: String,
-        hint: String,
+        help: String,
         map: Map<String, T>
     ): CmdArgNullable.KeyValue.Mapped<T> {
 
@@ -140,7 +140,7 @@ class CmdArgsParser(
                     map[v] as T
                 } else null
             },
-            hint = hint,
+            help = help,
             valueLabel = valueLabel,
             keys = keys.toList().toTypedArray(),
             map = map
@@ -153,7 +153,7 @@ class CmdArgsParser(
         vararg keys: String,
         default: T,
         valueLabel: String,
-        hint: String,
+        help: String,
         map: Map<String, T>
     ): CmdArgNonNull.KeyValue.Mapped<T> {
 
@@ -169,7 +169,7 @@ class CmdArgsParser(
                     map[v] as T
                 } else default
             },
-            hint = hint,
+            help = help,
             valueLabel = valueLabel,
             keys = keys.toList().toTypedArray(),
             map = map,
@@ -182,7 +182,7 @@ class CmdArgsParser(
     fun <T> requiredMapArg(
         vararg keys: String,
         valueLabel: String,
-        hint: String,
+        help: String,
         map: Map<String, T>
     ): CmdArgNonNull.KeyValue.Mapped<T> {
 
@@ -198,7 +198,7 @@ class CmdArgsParser(
                 requireNotNull(res) { "${getKeysLogTag(keys.toList())} Mapping not found for value $res" }
                 map[v] as T
             },
-            hint = hint,
+            help = help,
             valueLabel = valueLabel,
             keys = keys.toList().toTypedArray(),
             map = map,
@@ -210,7 +210,7 @@ class CmdArgsParser(
 
     fun flagArg(
         vararg keys: String,
-        hint: String,
+        help: String,
         default: Boolean = false
     ): CmdArgNonNull.Flag {
 
@@ -218,7 +218,7 @@ class CmdArgsParser(
 
         return CmdArgNonNull.Flag(
             keys = keys,
-            hint = hint,
+            help = help,
             default = default
         ) {
             val isFound = argsContainsFlag(keys.toList())
@@ -236,14 +236,14 @@ class CmdArgsParser(
 
     fun <T> positionalArg(
         valueLabel: String,
-        hint: String,
+        help: String,
         initializer: (String) -> T = { it as T }
     ): CmdArgNonNull.Positional<T> {
 
         validatePosValueLabel(valueLabel)
 
         return CmdArgNonNull.Positional(
-            hint,
+            help,
             valueLabel,
             initializer = {
                 val i = positionalIndexMap[valueLabel]!!

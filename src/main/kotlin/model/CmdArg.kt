@@ -1,11 +1,11 @@
 package lib.lib_args_parse.model
 
 sealed class CmdArgNullable<T>(
-    val hint: String,
+    val help: String,
     val keys: Array<out String>,
     val valueLabel: String,
     initializer: () -> T?,
-) : SynchronizedLazyImpl<T?>(initializer, hint) {
+) : SynchronizedLazyImpl<T?>(initializer, help) {
 
     fun validate() {
         initializer?.invoke()
@@ -13,76 +13,76 @@ sealed class CmdArgNullable<T>(
 
     sealed class KeyValue<T>(
         initializer: () -> T?,
-        hint: String,
+        help: String,
         valueLabel: String,
         keys: Array<out String>,
-    ) : CmdArgNullable<T?>(hint, keys, valueLabel, initializer) {
+    ) : CmdArgNullable<T?>(help, keys, valueLabel, initializer) {
         class Single<T>(
-            hint: String,
+            help: String,
             keys: Array<out String>,
             valueLabel: String,
             initializer: () -> T?,
-        ) : KeyValue<T?>(initializer, hint, valueLabel, keys)
+        ) : KeyValue<T?>(initializer, help, valueLabel, keys)
 
         class Mapped<T>(
-            hint: String,
+            help: String,
             keys: Array<out String>,
             valueLabel: String,
             initializer: () -> T?,
             val map: Map<String, T>
-        ) : KeyValue<T?>(initializer, hint, valueLabel, keys)
+        ) : KeyValue<T?>(initializer, help, valueLabel, keys)
     }
 }
 
 sealed class CmdArgNonNull<T>(
     initializer: () -> T,
-    val hint: String
-) : SynchronizedLazyImpl<T>(initializer, hint) {
+    val help: String
+) : SynchronizedLazyImpl<T>(initializer, help) {
 
     sealed class KeyValue<T>(
         initializer: () -> T,
-        hint: String,
+        help: String,
         val valueLabel: String,
         val keys: Array<out String>,
         val default: T?,
     ) : CmdArgNonNull<T>(initializer = {
         initializer() ?: checkNotNull(default)
-    }, hint) {
+    }, help) {
 
         fun validate() {
             initializer?.invoke()
         }
 
         class Single<T>(
-            hint: String,
+            help: String,
             keys: Array<out String>,
             valueLabel: String,
             default: T?,
             initializer: () -> T,
-        ) : KeyValue<T>(initializer, hint, valueLabel, keys, default)
+        ) : KeyValue<T>(initializer, help, valueLabel, keys, default)
 
         class Mapped<T>(
-            hint: String,
+            help: String,
             keys: Array<out String>,
             valueLabel: String,
             default: T?,
             initializer: () -> T,
             val map: Map<String, T>
-        ) : KeyValue<T>(initializer, hint, valueLabel, keys, default)
+        ) : KeyValue<T>(initializer, help, valueLabel, keys, default)
     }
 
     class Flag(
         val keys: Array<out String>,
         val default: Boolean,
-        hint: String,
+        help: String,
         initializer: () -> Boolean,
-    ) : CmdArgNonNull<Boolean>(initializer, hint)
+    ) : CmdArgNonNull<Boolean>(initializer, help)
 
     class Positional<T>(
-        hint: String,
+        help: String,
         val valueLabel: String,
         initializer: () -> T
-    ) : CmdArgNonNull<T>(initializer, hint)
+    ) : CmdArgNonNull<T>(initializer, help)
 }
 
 class Subcommand<T>(

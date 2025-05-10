@@ -103,7 +103,7 @@ internal object CmdArgsParserHelpPrinter {
             val tuple = buildList {
                 add(r.keys.joinToString(", ") { "$it ${r.valueLabel}" })
                 add(CHAR_TABLE_SEPARATOR)
-                add(r.hint)
+                add(r.help)
                 if (r.default != null) {
                     add(defaultValueString(r.default))
                 }
@@ -133,7 +133,7 @@ internal object CmdArgsParserHelpPrinter {
         tuples.add(listOf("Positional args:"))
         for (p in positionals) {
             val label = p.valueLabel
-            val hint = p.hint
+            val hint = p.help
             tuples.add(listOf(label, CHAR_TABLE_SEPARATOR, hint))
         }
         tuples.add(emptyList<Unit>())
@@ -151,7 +151,7 @@ internal object CmdArgsParserHelpPrinter {
             val tuple = buildList {
                 add(opt.keys.joinToString(", ") { "$it ${opt.valueLabel}" })
                 add(CHAR_TABLE_SEPARATOR)
-                add(opt.hint)
+                add(opt.help)
             }
 
             tuples.add(tuple)
@@ -171,7 +171,7 @@ internal object CmdArgsParserHelpPrinter {
             val tuple = buildList {
                 add(opt.keys.joinToString(", ") { "$it ${opt.valueLabel}" })
                 add(CHAR_TABLE_SEPARATOR)
-                add(opt.hint)
+                add(opt.help)
 
                 val default = when (opt) {
                     is CmdArgNonNull.KeyValue.Single -> opt.default
@@ -221,7 +221,7 @@ internal object CmdArgsParserHelpPrinter {
         tuples.add(listOf("Flag args:"))
         for (flag in flags) {
             val keys = flag.keys.joinToString(", ") { it }
-            val hint = flag.hint
+            val hint = flag.help
             tuples.add(listOf(keys, CHAR_TABLE_SEPARATOR, hint, defaultValueString(flag.default)))
         }
         tuples.add(emptyList<List<Unit>>())
