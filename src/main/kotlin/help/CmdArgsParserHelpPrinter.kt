@@ -103,10 +103,7 @@ internal object CmdArgsParserHelpPrinter {
             val tuple = buildList {
                 add(r.keys.joinToString(", ") { "$it ${r.valueLabel}" })
                 add(CHAR_TABLE_SEPARATOR)
-                add(r.help)
-                if (r.default != null) {
-                    add(defaultValueString(r.default))
-                }
+                add(defaultValueString(r.help, r.default))
             }
 
             tuples.add(tuple)
@@ -171,7 +168,6 @@ internal object CmdArgsParserHelpPrinter {
             val tuple = buildList {
                 add(opt.keys.joinToString(", ") { "$it ${opt.valueLabel}" })
                 add(CHAR_TABLE_SEPARATOR)
-                add(opt.help)
 
                 val default = when (opt) {
                     is CmdArgNonNull.KeyValue.Single -> opt.default
@@ -182,9 +178,7 @@ internal object CmdArgsParserHelpPrinter {
                     }
                 }
 
-                if (default != null) {
-                    add(defaultValueString(default))
-                }
+                add(defaultValueString(opt.help, default))
             }
 
             tuples.add(tuple)
@@ -222,12 +216,14 @@ internal object CmdArgsParserHelpPrinter {
         for (flag in flags) {
             val keys = flag.keys.joinToString(", ") { it }
             val hint = flag.help
-            tuples.add(listOf(keys, CHAR_TABLE_SEPARATOR, hint, defaultValueString(flag.default)))
+            tuples.add(listOf(keys, CHAR_TABLE_SEPARATOR, defaultValueString(hint, flag.default)))
         }
         tuples.add(emptyList<List<Unit>>())
     }
 
-    private fun defaultValueString(value: Any): String {
-        return "Default - $value"
+    private fun defaultValueString(help: String, defaultValue: Any?): String {
+        return if (defaultValue != null) {
+            "$help (Default $defaultValue)"
+        } else help
     }
 }
