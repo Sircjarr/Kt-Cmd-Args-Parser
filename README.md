@@ -12,28 +12,74 @@ An easy-to-use command-line argument parser for Kotlin apps. Interprets an `Arra
 * Builtin `--help` command to print neatly-formatted and comprehensive usage statement
 * Builtin `--version` and `--quit` commands
 * `--` delimiter to separate options and positional args 
-* Subcommands support for implementing commands like `git commit [options]` or `git add [options]` 
+* Subcommands support for implementing commands like `git commit [options]` or `git add [options]`
+
+#### Table of contents
+[Argument nomenclature](#argument-nomenclature)
+
+[Game args example walkthrough](#game_args_example)
+
+Exceptions
+
+Subcommands
+
+Tests
+
+Importing the library
+
+Todo
+
+Contributing
+
+Aknowledgement
 
 ---
 
-# Quickstart usage example
+# Argument nomenclature
+
+**Options**: Generic term for the args defined before the positional args. Options encompass: requireds, optionals, and flag args.
+
+**Optionals**: Key-value option that may or may not be declared in `args` and may or may not have a default fallback value
+
+**Required**: Key-value option that must be provided in `args` to successfully parse
+
+**Flag**: Optional without a key that maps to a `Boolean`. `False` by default and can be overriden to be `true` by default.
+
+**Mapped**: Key-value option with a restricted set of values. Can be made either required or optional.
+
+**Positional**: Argument(s) found after the option declarations in `args`. Their 'position' in `args` matters relative to thier declaration order.
+
+# Game args example walkthrough
 Example creating and parsing `args` to launch a game
+
+#### Optional args
+#### Required args
+#### Optional args with defaults
+#### Flag args
+#### Mapped args
+#### Positional args
+#### Configuring help output
+#### Usage
+#### Help output
+
 
 #### Construct the app-specific args class
 ```kotlin
-// Make CmdArgsParser the only param in the constructor
-class MyGameArgs(parser: CmdArgsParser) {
+class MyGameArgs(parser: CmdArgsParser): CmdArgHelpConfigHolder {
 
-    // Optional arg with behavior to fallback to null if not found in the args array
+     override val cmdArgHelpConfig: CmdArgHelpConfig
+        get() = CmdArgHelpConfig(
+                prologue = "Prologue - A challenging puzzle game all about life",
+		epilogue = "Epilogue - Have fun!"
+            }
+        )
+
     val seed: String? by parser.optionalArg(
         "-s", "--seed",
- 	// Referenced in the output of the --help command eg, [-s SEED]
         valueLabel = "SEED",
-	// Description for this arg referenced in the --help command
         help = "Seed for the game instance. Uses random seed if not set.",
     )
 
-    // Optional arg with behavior to fallback to 'default' if not found in the args array
     val numLives: Int by parser.optionalArg(
         "-l", "--num-lives",
         valueLabel = "COUNT",
@@ -45,14 +91,11 @@ class MyGameArgs(parser: CmdArgsParser) {
         }
     }
 
-    // Optional flag arg which is false by default unless found in the args array
     val cheatsEnabled: Boolean by parser.flagArg(
         "-c", "--cheats-enabled",
         help = "Enable use of cheat codes"
     )
 
-    // Required in the args array
-    // Map arg restricts possible String values and serializes to the Maps value
     val mode: Mode by parser.requiredMapArg(
         "-m", "--mode",
         valueLabel = "MODE",
@@ -64,7 +107,6 @@ class MyGameArgs(parser: CmdArgsParser) {
         )
     )
 
-    // The first positional arg
     val playerSpeed: Double by parser.positionalArg(
         valueLabel = "SPEED",
         help = "Player speed"
@@ -74,7 +116,6 @@ class MyGameArgs(parser: CmdArgsParser) {
         }
     }
 
-    // The second positional arg
     val saveFile: File by parser.positionalArg(
         valueLabel = "FILE",
         help = "Save file location"
@@ -96,14 +137,15 @@ val args = arrayOf(
 )
 
 CmdArgsParser(args, "MyGame.jar").parse(::MyGameArgs)
-// the parse() op returns a Kotlin Result where onSuccess is only called when parsing the args
-// array into the custom args class was successful
 .onSuccess { parsedArgs ->
     handleParsedArgs(parsedArgs)
 }.onFailure {
     // Optionally handle parse failure
 }
 ```
+
+# Formatting `--help` output
+Formatting the `--help` output is limited in the project's current state. However, you may set a prologue or an epilogue statement like so: 
 
 #### Help command output
 ```
@@ -128,22 +170,6 @@ Optional args:
 Flag args:                                                                             
 -c, --cheats-enabled        : Enable use of cheat codes (Default false)
 ```
-
-# Argument nomenclature
-**Options**: Generic term for the args defined before the positional args. Options encompass: requireds, optionals, and flag args.
-
-**Optionals**: Key-value option that may or may not be declared in `args` and may or may not have a default fallback value
-
-**Required**: Key-value option that must be provided in `args` to successfully parse
-
-**Flag**: Optional without a key that maps to a `Boolean`. `False` by default and can be overriden to be `true` by default.
-
-**Mapping**: Key-value option with a restricted set of values. Can be made either required or optional.
-
-**Positional**: Argument(s) found after the option declarations in `args`. Their 'position' in `args` matters relative to thier declaration order.
-
-# Formatting `--help` output
-Formatting the `--help` output is limited in the project's current state. However, you may set a prologue or an epilogue statement like so: 
 
 # Exceptions
 
