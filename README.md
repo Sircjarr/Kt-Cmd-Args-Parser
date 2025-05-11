@@ -16,18 +16,24 @@ An easy-to-use command-line argument parser for Kotlin apps. Interprets an `Arra
 
 ---
 
-# Example usage
+# Quickstart usage example
 Example creating and parsing `args` to launch a game
 
-#### Define the args class to be serialized and pass `CmdArgsParser` in the constructor to declare the `CmdArg`s
+#### Construct the app-specific args class
 ```kotlin
+// Make CmdArgsParser the only param in the constructor
 class MyGameArgs(parser: CmdArgsParser) {
+
+    // Optional arg with behavior to fallback to null if not found in the args array
     val seed: String? by parser.optionalArg(
         "-s", "--seed",
+ 	// Referenced in the output of the --help command eg, [-s SEED]
         valueLabel = "SEED",
+	// Description for this arg referenced in the --help command
         help = "Seed for the game instance. Uses random seed if not set.",
     )
 
+    // Optional arg with behavior to fallback to 'default' if not found in the args array
     val numLives: Int by parser.optionalArg(
         "-l", "--num-lives",
         valueLabel = "COUNT",
@@ -39,22 +45,26 @@ class MyGameArgs(parser: CmdArgsParser) {
         }
     }
 
+    // Optional flag arg which is false by default unless found in the args array
     val cheatsEnabled: Boolean by parser.flagArg(
         "-c", "--cheats-enabled",
         help = "Enable use of cheat codes"
     )
 
+    // Required in the args array
+    // Map arg restricts possible String values and serializes to the Maps value
     val mode: Mode by parser.requiredMapArg(
         "-m", "--mode",
         valueLabel = "MODE",
         help = "Set game mode difficulty",
-        map = mapOf(
+	map = mapOf(
             "easy" to Mode.EASY,
             "medium" to Mode.MEDIUM,
             "hard" to Mode.HARD
         )
     )
 
+    // The first positional arg
     val playerSpeed: Double by parser.positionalArg(
         valueLabel = "SPEED",
         help = "Player speed"
@@ -64,6 +74,7 @@ class MyGameArgs(parser: CmdArgsParser) {
         }
     }
 
+    // The second positional arg
     val saveFile: File by parser.positionalArg(
         valueLabel = "FILE",
         help = "Save file location"
@@ -84,7 +95,10 @@ val args = arrayOf(
   "C:\\Users\\User\\MyGame\\saves"
 )
 
-CmdArgsParser(args, "MyGame.jar").parse(::MyGameArgs).onSuccess { parsedArgs ->
+CmdArgsParser(args, "MyGame.jar").parse(::MyGameArgs)
+// the parse() op returns a Kotlin Result where onSuccess is only called when parsing the args
+// array into the custom args class was successful
+.onSuccess { parsedArgs ->
     handleParsedArgs(parsedArgs)
 }.onFailure {
     // Optionally handle parse failure
@@ -128,12 +142,60 @@ Flag args:
 
 **Positional**: Argument(s) found after the option declarations in `args`. Their 'position' in `args` matters relative to thier declaration order.
 
-# Subcommands
-
 # Formatting `--help` output
 Formatting the `--help` output is limited in the project's current state. However, you may set a prologue or an epilogue statement like so: 
 
 # Exceptions
+
+# Subcommands
+Example of a file encryption program with 'encrypt' and 'decrypt' subcommands
+
+```kotlin
+class FileEncryptorArgs(parser: CmdArgsParser) {
+
+    val encryptionArgs: EncryptionArgs? by parser.subparser("encrypt", "Encryption mode", ::EncryptionArgs)
+    val decryptionArgs: DecryptionArgs? by parser.subparser("decrypt", "Decryption mode", ::DecryptionArgs)
+
+    // Note that this can be a handy way to cut down on code duplication and share the same args amongst subcommands
+    open class SharedArgs(parser: CmdArgsParser) {
+        val srcFile: File by parser.positionalArg(
+            valueLabel = "SRC",
+            help = "Source file"
+        ) { File(it) }
+
+        val destFile: File by parser.positionalArg(
+            valueLabel = "DEST",
+            help = "Destination file"
+        ) { File(it) }
+    }
+
+    class EncryptionArgs(subparser: CmdArgsParser): SharedArgs(subparser) {
+        val encFileExcludeRegex: Regex? by subparser.optionalArg(
+            "-f", "--enc-filereg",
+            valueLabel = "REGEX",
+            help = "Exclude file regex for encryption"
+        ) { it.toRegex() }
+
+        val encDirExcludeRegex: Regex? by subparser.optionalArg(
+            "-d", "--enc-dirreg",
+            valueLabel = "REGEX",
+            help = "Exclude directory regex for encryption"
+        ) { it.toRegex() }
+    }
+
+    class DecryptionArgs(subparser: CmdArgsParser): SharedArgs(subparser)
+}
+```
+
+#### `--help` output
+```
+Usage: FileEncryptor.jar
+SUBCOMMAND [ARGS]
+                                                               
+Subcommands:                                                     
+encrypt      : Encryption mode                              
+decrypt      : Decryption mode   
+```
 
 # Tests
 
