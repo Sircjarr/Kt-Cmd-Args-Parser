@@ -1,7 +1,7 @@
-# Description
+## Description
 An easy-to-use command-line argument parser for Kotlin apps. Interprets an `Array<String>`, `args`, formatted in a familiar syntax and serializes a valid, stable object of arguments to be coveniently read in any given program.
 
-#### Features
+## Features
 * Declare required, optional, flag, and positional args
 * Supports multiple key-value delimiters for your preferred use, eg: `-n 3`, `-n=3`, or `-n3`
 * Set default values for optional and flags args
@@ -14,24 +14,24 @@ An easy-to-use command-line argument parser for Kotlin apps. Interprets an `Arra
 * `--` delimiter to separate options and positional args 
 * Subcommands support for implementing commands like `git commit [options]` or `git add [options]`
 
-#### Table of contents
-[Argument nomenclature](#argument-nomenclature)
-
-[Game args example walkthrough](#game_args_example)
-
-Exceptions
-
-Subcommands
-
-Tests
-
-Importing the library
-
-Todo
-
-Contributing
-
-Aknowledgement
+## Table of contents
+- [Argument nomenclature](#argument-nomenclature)
+- [Game args example walkthrough](#game-args-example-walkthrough)
+	- [Optional args](#optional-args)
+	- [Required args](#required-args)
+	- [Optional args with defaults](#optional-args-with-defaults)
+	- [Flag args](#flag-args)
+	- [Mapped args](#mapped-args)
+	- [Positional args](#positional-args)
+	- [Configuring help output](#configuring-help-output)
+	- [Complete example](#complete-example)
+- [Exceptions](#exceptions)
+- [Subcommands](#subcommands)
+- [Tests](#tests)
+- [Importing the library](#importing-the-library)
+- [Todo](#todo)
+- [Contributing](#contributing)
+- [Aknowledgement](#aknowledgement)
 
 ---
 
@@ -52,15 +52,52 @@ Aknowledgement
 # Game args example walkthrough
 Example creating and parsing `args` to launch a game
 
+#### Create the custom args class
+To begin, create a custom class with only `CmdArgsParser` in the constructor.
+
+```kotlin
+class MyGameArgs(parser: CmdArgsParser)
+```
+We are now ready to start defining the arg properties.
+
 #### Optional args
+Say we wanted a 'seed' argument for the program, where the user may or may not specify it. This can looks something like this: 
+```kotlin
+val seed: String? by parser.optionalArg(
+	"-s", "--seed",
+	valueLabel = "SEED",
+	help = "Seed for the game instance. Uses random seed if not set.",
+)
+```
+`parser.optionalArg()` returns a modified `Lazy` delgate whose initialized value is nullable. So we explicitly define the return type as `String?` and not `String`. The `help` parameter here indicates that if the user does not specify a `--seed` then null will be set and the program can later interpret that to mean generating a random seed for the game instance. The vararg param `keys` allows us to accept either `-s` or it's verbose form `--seed` as keys in `args`. Lastly, the `valueLabel` parameter is used by the `--help` command to demonstrate usage of the command eg, `[-s SEED]` 
+
+
 #### Required args
+Similar to the optional arg, we can require an arg to be specified. This delegate will always be non-null.
+TODO
+
 #### Optional args with defaults
+
+Very similar to the optional arg from before with the difference being the param `default` is specified and the return type must be non-nullable.
+
+```kotlin
+val numLives: Int by parser.optionalArg(
+	"-l", "--num-lives",
+        valueLabel = "COUNT",
+        help = "Set count of player lives",
+        default = 3
+) { argString ->
+	argString.toInt().also {
+            require(it > 0) { "Lives must be > 0" }
+        }
+}
+```
+
 #### Flag args
 #### Mapped args
 #### Positional args
 #### Configuring help output
-#### Usage
-#### Help output
+#### Complete example
 
 
 #### Construct the app-specific args class
