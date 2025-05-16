@@ -518,7 +518,7 @@ class CmdArgsParser(
             } catch (e: InvocationTargetException) {
                 val cause = e.cause!!
                 if (cause is ClassCastException) {
-                    throw ClassCastException("Failed casting value for member '${it.name}' with type ${it.returnType}. Did you include the transform() parameter?")
+                    throw ClassCastException("Failed casting value for member '${it.name}' with type ${it.returnType}. Did you include the initializer() parameter?")
                 }
                 throw cause
             }
