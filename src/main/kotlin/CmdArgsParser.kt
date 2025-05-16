@@ -10,6 +10,8 @@ import lib.lib_args_parse.help.CmdArgsParserHelpPrinter
 import lib.lib_args_parse.model.CmdArgNonNull
 import lib.lib_args_parse.model.CmdArgNullable
 import lib.lib_args_parse.model.Subcommand
+import java.lang.reflect.InvocationTargetException
+import kotlin.reflect.full.declaredMembers
 
 private const val OPTIONS_POSITIONALS_ARGS_DELIM = "--"
 
@@ -370,7 +372,7 @@ class CmdArgsParser(
         }
 
         return try {
-            validateCmdArgValues()
+            validateCmdArgValues(parsedArgs)
             Result.success(parsedArgs)
         } catch (e: Exception) {
             val parseEx = CmdArgsParseException(e)
@@ -379,8 +381,8 @@ class CmdArgsParser(
         }
     }
 
-    private fun printParseError(e: Exception) {
-        println("error: ${e.message}")
+    private fun printParseError(t: Throwable) {
+        println("error: ${t.message}")
     }
 
     private fun printVersion() {
@@ -509,10 +511,18 @@ class CmdArgsParser(
         throw IllegalArgumentException("No key found for arg $arg")
     }
 
-    private fun validateCmdArgValues() {
-        opts.forEach { it.validate() }
-        optDefaults.forEach { it.validate() }
-        reqs.forEach { it.validate() }
+    private fun <T> validateCmdArgValues(parsedArgs: T) {
+        parsedArgs!!::class.declaredMembers.forEach {
+            try {
+                it.call(parsedArgs)
+            } catch (e: InvocationTargetException) {
+                val cause = e.cause!!
+                if (cause is ClassCastException) {
+                    throw ClassCastException("Failed casting value for member '${it.name}' with type ${it.returnType}. Did you include the transform() parameter?")
+                }
+                throw cause
+            }
+        }
     }
 
     private fun getKeysLogTag(keys: List<String>): String {
