@@ -58,39 +58,54 @@ To begin, create a custom class with only `CmdArgsParser` in the constructor.
 ```kotlin
 class MyGameArgs(parser: CmdArgsParser)
 ```
-We are now ready to start defining the arg properties.
+We are now ready to start defining the args as member properties on this class.
 
 #### Optional args
 Say we wanted a 'seed' argument for the program, where the user may or may not specify it. This can looks something like this: 
 ```kotlin
 val seed: String? by parser.optionalArg(
-	"-s", "--seed",
-	valueLabel = "SEED",
-	help = "Seed for the game instance. Uses random seed if not set.",
+    "-s", "--seed",
+    valueLabel = "SEED",
+    help = "Seed for the game instance. Uses random seed if not set.",
 )
 ```
-`parser.optionalArg()` returns a modified `Lazy` delgate whose initialized value is nullable. So we explicitly define the return type as `String?` and not `String`. The `help` parameter here indicates that if the user does not specify a `--seed` then null will be set and the program can later interpret that to mean generating a random seed for the game instance. The vararg param `keys` allows us to accept either `-s` or it's verbose form `--seed` as keys in `args`. Lastly, the `valueLabel` parameter is used by the `--help` command to demonstrate usage of the command eg, `[-s SEED]` 
-
-
-#### Required args
-Similar to the optional arg, we can require an arg to be specified. This delegate will always be non-null.
-TODO
+Breaking this down, `parser.optionalArg()` returns a modified `Lazy` delgate whose initialized value is nullable. So we explicitly define the return type as `String?` and not `String`. The value of the `help` parameter here indicates that if the user does not specify a `--seed` then null will be set and the program can later interpret that to mean generating a random seed for the game instance. The vararg param `keys` allows us to accept either `-s` or its verbose form `--seed` as keys in `args`. Lastly, the `valueLabel` parameter is used by the `--help` command to demonstrate usage of the command eg, `[-s SEED]` 
 
 #### Optional args with defaults
-
-Very similar to the optional arg from before with the difference being the param `default` is specified and the return type must be non-nullable.
-
+If we wanted an optional arg to fallback to some default value instead of null, we can simply add a default parameter: 
 ```kotlin
 val numLives: Int by parser.optionalArg(
-	"-l", "--num-lives",
-        valueLabel = "COUNT",
-        help = "Set count of player lives",
-        default = 3
-) { argString ->
-	argString.toInt().also {
+    "-l", "--num-lives",
+    valueLabel = "COUNT",
+    help = "Set count of player lives",
+    default = 3
+) 
+```
+
+#### Casting arg values
+Note in the previous example that `numLives` is an `Int`. In its current state the app would return a `Result.Failure` with a `CmdArgsParseException` and print `error: Failed casting value for member 'numLives' with type kotlin.Int. Did you include the initializer() parameter?`. By default the parser does not handle casting the value of the arg. You must explicity cast them from `String` to the desired type and return it in the `initializer` parameter. You can also optionally add a validation check:   
+```kotlin
+val numLives: Int by parser.optionalArg(
+    "-l", "--num-lives",
+    valueLabel = "COUNT",
+    help = "Set count of player lives",
+    default = 3,
+    transform = { argString ->
+        argString.toInt().also {
             require(it > 0) { "Lives must be > 0" }
         }
-}
+    }
+) 
+```
+
+#### Required args
+Specifying required args is very similar to specifying optional arguments. Make the seed arg required by changing the return type to a non-null `String` and calling `parser.requiredArg()`:
+```kotlin
+val seed: String by parser.requiredArg(
+    "-s", "--seed",
+    valueLabel = "SEED",
+    help = "Seed for the game instance"
+)
 ```
 
 #### Flag args
@@ -98,9 +113,6 @@ val numLives: Int by parser.optionalArg(
 #### Positional args
 #### Configuring help output
 #### Complete example
-
-
-#### Construct the app-specific args class
 ```kotlin
 class MyGameArgs(parser: CmdArgsParser): CmdArgHelpConfigHolder {
 
