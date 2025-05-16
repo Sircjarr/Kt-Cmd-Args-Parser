@@ -50,7 +50,7 @@ An easy-to-use command-line argument parser for Kotlin apps. Interprets an `Arra
 **Positional**: Argument(s) found after the option declarations in `args`. Their 'position' in `args` matters relative to thier declaration order.
 
 # Game args example walkthrough
-Example creating and parsing `args` to launch a game
+Example creating and parsing `args` for a game program
 
 #### Create the custom args class
 To begin, create a custom class with only `CmdArgsParser` in the constructor.
@@ -72,7 +72,7 @@ val seed: String? by parser.optionalArg(
 Breaking this down, `parser.optionalArg()` returns a modified `Lazy` delgate whose initialized value is nullable. So we explicitly define the return type as `String?` and not `String`. The value of the `help` parameter here indicates that if the user does not specify a `--seed` then null will be set and the program can later interpret that to mean generating a random seed for the game instance. The vararg param `keys` allows us to accept either `-s` or its verbose form `--seed` as keys in `args`. Lastly, the `valueLabel` parameter is used by the `--help` command to demonstrate usage of the command eg, `[-s SEED]` 
 
 #### Optional args with defaults
-If we wanted an optional arg to fallback to some default value instead of null, we can simply add a default parameter: 
+If we wanted an optional arg to fallback to some default value instead of null, we can change the return type to a non-nullable type `Int` and include a default parameter: 
 ```kotlin
 val numLives: Int by parser.optionalArg(
     "-l", "--num-lives",
@@ -90,7 +90,7 @@ val numLives: Int by parser.optionalArg(
     valueLabel = "COUNT",
     help = "Set count of player lives",
     default = 3,
-    transform = { argString ->
+    initializer = { argString ->
         argString.toInt().also {
             require(it > 0) { "Lives must be > 0" }
         }
