@@ -388,7 +388,7 @@ val args = arrayOf(
 ### Subcommands and help builtin
 `--help` is supported for both the root args and subcommand args.
 
-**`FileEncryptor.jar --help` output**
+**`FileEncryptor.jar --help` output:**
 ```
 Usage: FileEncryptor.jar
 SUBCOMMAND [ARGS]
@@ -398,7 +398,7 @@ encrypt      : Encryption mode
 decrypt      : Decryption mode   
 ```
 
-**`FileEncryptor.jar encrypt --help` output**
+**`FileEncryptor.jar encrypt --help` output:**
 ```
 Usage: FileEncryptor.jar encrypt
 [-f=REGEX] [-d=REGEX] 
@@ -427,7 +427,7 @@ The following [CmdArgsParserExcepions](src/main/kotlin/exception/CmdArgsParserEx
 4.`CmdArgsParseException` occurs at the last step in parsing and is returned when there is an issue with parsing one of the args from `args`, eg: required arg not found, casting failure, or some other error thrown from the `initializer()` param. 
 
 ---
-If either `CmdArgsMalformedException` or `CmdArgsParseException` occurs, the program will print out a concise single-line error statement. Some example logs:
+If either `CmdArgsMalformedException` or `CmdArgsParseException` occur, the program will print out a concise single-line error statement. Some example logs:
 ```
 error: [-i, --include] Required value not found
 error: No value specified for arg -x
