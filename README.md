@@ -74,7 +74,7 @@ val seed: String? by parser.optionalArg(
     help = "Seed for the game instance. Uses random seed if not set.",
 )
 ```
-Breaking this down, `parser.optionalArg()` returns a modified `Lazy` delgate whose initialized value is nullable. So we explicitly define the return type as `String?` and not `String`. The value of the `help` parameter here indicates that if the user does not specify a `--seed` then null will be set and the program can later interpret that to mean generating a random seed for the game instance. The vararg param `keys` allows us to accept either `-s` or its verbose form `--seed` as keys in `args`. Lastly, the `valueLabel` parameter is used by the `--help` command to demonstrate usage of the command eg, `[-s SEED]` 
+Breaking this down, `parser.optionalArg()` returns a modified `Lazy` delegate, [CmdArgNullable.KeyValue](src/main/kotlin/model/CmdArg.kt), whose `initializer` resolves to a nullable generic type. So we explicitly define the return type as `String?` and not `String`. The value of the `help` parameter here indicates that if the user does not specify a `--seed` then null will be set and the program can later interpret that to mean generating a random seed for the game instance. The vararg param `keys` allows us to accept either `-s` or its verbose form `--seed` as keys in `args`. Lastly, the `valueLabel` parameter is used by the `--help` command to demonstrate usage of the command eg, `[-s SEED]` 
 
 If we wanted an optional arg to fallback to some default value instead of null, we can change the return type to a non-nullable type `Int` and include a default parameter: 
 ```kotlin
@@ -312,11 +312,19 @@ Example of an args class for a file encryption program supporting 'encrypt' and 
 
 ```kotlin
 class FileEncryptorArgs(parser: CmdArgsParser) {
-    val encryptionArgs: EncryptionArgs? by parser.subparser("encrypt", "Encryption mode", ::EncryptionArgs)
-    val decryptionArgs: DecryptionArgs? by parser.subparser("decrypt", "Decryption mode", ::DecryptionArgs)
+    val encryptionArgs: EncryptionArgs? by parser.subparser(
+        subcommand = "encrypt",
+        help = "Encryption mode",
+        creator = ::EncryptionArgs
+    )
+    val decryptionArgs: DecryptionArgs? by parser.subparser(
+        subcommand = "decrypt",
+        help = "Decryption mode",
+        creator = ::DecryptionArgs
+    )
 }
 ```
-The method for defining a subcommand is `parser.subparser()`. Note that the return type of this method is a non-nullable `Lazy` delegate `Subcommand` which initializes to another custom args class on parsing. 
+The method for defining a subcommand is `parser.subparser()`. The return type of this method is a non-nullable `Lazy` delegate `Subcommand` which initializes to another custom args class on parsing. 
 
 **Subcommand args classes**
 ```kotlin
