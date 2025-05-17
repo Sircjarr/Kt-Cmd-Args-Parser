@@ -452,7 +452,7 @@ There are 40+ [unit tests](src/test/kotlin) covering all features and error hand
 ## Contributing
 MRs and creating issues are more than welcome
 
-## Aknowledgement
+## :star: Aknowledgements
 Thanks to [kotlin-argparser](https://github.com/xenomachina/kotlin-argparser) for the inspiration of this project.
 
 If this project caught your interest enough to star or contribute in any way — thank you!
