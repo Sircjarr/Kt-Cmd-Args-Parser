@@ -41,18 +41,13 @@ An easy-to-use command-line argument parser for Kotlin apps. Interprets an `Arra
 ---
 
 ## Argument nomenclature
-
-**Options**: Generic term for the args defined before the positional args. Options encompass: requireds, optionals, and flag args.
-
-**Optionals**: Key-value option that may or may not be declared in `args` and may or may not have a default fallback value
-
-**Required**: Key-value option that must be provided in `args` to successfully parse
-
-**Flag**: Optional without a key that maps to a `Boolean`. `false` by default and can be overriden to be `true` by default.
-
-**Mapped**: Key-value option with a restricted set of values. Can be made either required or optional.
-
-**Positional**: Argument(s) found after the option declarations in `args`. Their 'position' in `args` matters relative to thier declaration order.
+Term | Definition
+:-|-:|
+Options | Generic term for the args declared before the positional args in the command
+Optional args | Key-value option that may or may not be declared in the command
+Required args | Key-value option that must be provided in the command
+Flag args | Optional arg without a key that maps to a `Boolean` value
+Positional args | Argument(s) that are declared after the options in the command and their 'position' in the command matters
 
 ## Game args example walkthrough
 Example creating and parsing `args` for a game program
