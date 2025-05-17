@@ -31,7 +31,7 @@ An easy-to-use command-line argument parser for Kotlin apps. Interprets an `Arra
 - [Subcommands](#subcommands)
     - [File encryptor example](#file-encryptor-example)
     - [Subcommands and help builtin](#subcommands-and-help-builtin)
-- [Exceptions](#exceptions)
+- [Exceptions and error logs](#exceptions-and-error-logs)
 - [Tests](#tests)
 - [Importing the library](#importing-the-library)
 - [Todo](#todo)
@@ -405,7 +405,7 @@ Optional args:
 -d REGEX, --enc-dirreg REGEX  : Exclude directory regex for encryption 
 ```
 
-# Exceptions
+# Exceptions and error logs
 The following [CmdArgsParserExcepions](src/main/kotlin/CmdArgsParserExceptions) are used for error handling and debugging and occur in the order provided:
 
 1.`CmdArgsParserInitiaizationException` occurs when there is some issue with creating the args, eg: declaring the same key twice, or providing a key with an invalid format.
@@ -417,6 +417,14 @@ The following [CmdArgsParserExcepions](src/main/kotlin/CmdArgsParserExceptions) 
 3.`CmdArgsMalformedException` is returned when the `args` is malformed in some way, eg: unrecognized key, missing arg value, or too many positionals declared.
 
 4.`CmdArgsParseException` occurs at the last step in parsing and is returned when there is an issue with parsing one of the args from `args`, eg: required arg not found, casting failure, or some other error thrown from the `initializer()` param. 
+
+---
+If either `CmdArgsMalformedException` or `CmdArgsParseException` occurs, the program will print out a concise single-line error statement. Some example logs:
+```
+error: [-i, --include] Required value not found
+error: No value specified for arg -x
+error: Positional arg(s) not provided: DEST
+```
 
 # Tests
 
