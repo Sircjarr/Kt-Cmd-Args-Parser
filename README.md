@@ -3,7 +3,7 @@ An easy-to-use command-line argument parser for Kotlin apps. Interprets an `Arra
 
 ## Features
 * Declare required, optional, flag, and positional args
-* Supports multiple key-value delimiters for your preferred use, eg: `-n 3`, `-n=3`, or `-n3`
+* Supports multiple key-value delimiters for options, eg: `-n 3`, `-n=3`, or `-n3`
 * Set default values for optional and flags args
 * Convenient mapping arg for restricted values
 * Transform parameter to convert `String` value to arbitrary type
@@ -17,16 +17,19 @@ An easy-to-use command-line argument parser for Kotlin apps. Interprets an `Arra
 ## Table of contents
 - [Argument nomenclature](#argument-nomenclature)
 - [Game args example walkthrough](#game-args-example-walkthrough)
-	- [Optional args](#optional-args)
-	- [Required args](#required-args)
-	- [Optional args with defaults](#optional-args-with-defaults)
-	- [Flag args](#flag-args)
-	- [Mapped args](#mapped-args)
-	- [Positional args](#positional-args)
-	- [Configuring help output](#configuring-help-output)
-	- [Complete example](#complete-example)
+    - [Optional args](#optional-args)
+    - [Casting arg values](#casting-arg-values)
+    - [Required args](#required-args)
+    - [Flag args](#flag-args)
+    - [Mapped args](#mapped-args)
+    - [Positional args](#positional-args)
+    - [Configuring help output](#configuring-help-output)
+    - [Complete custom args class](#complete-custom-args-class)
+    - [Parsing and using the args](#parsing-and-using-the-args)
+    - [Builtin help command](#builtin-help-command)
+    - [Builtin version command](#builtin-version-command)
+- [File encryption example with subcommands](#file-encryption-example-with-subcommands)
 - [Exceptions](#exceptions)
-- [Subcommands](#subcommands)
 - [Tests](#tests)
 - [Importing the library](#importing-the-library)
 - [Todo](#todo)
@@ -35,7 +38,7 @@ An easy-to-use command-line argument parser for Kotlin apps. Interprets an `Arra
 
 ---
 
-# Argument nomenclature
+## Argument nomenclature
 
 **Options**: Generic term for the args defined before the positional args. Options encompass: requireds, optionals, and flag args.
 
@@ -43,16 +46,16 @@ An easy-to-use command-line argument parser for Kotlin apps. Interprets an `Arra
 
 **Required**: Key-value option that must be provided in `args` to successfully parse
 
-**Flag**: Optional without a key that maps to a `Boolean`. `False` by default and can be overriden to be `true` by default.
+**Flag**: Optional without a key that maps to a `Boolean`. `false` by default and can be overriden to be `true` by default.
 
 **Mapped**: Key-value option with a restricted set of values. Can be made either required or optional.
 
 **Positional**: Argument(s) found after the option declarations in `args`. Their 'position' in `args` matters relative to thier declaration order.
 
-# Game args example walkthrough
+## Game args example walkthrough
 Example creating and parsing `args` for a game program
 
-#### Create the custom args class
+### Create the custom args class
 To begin, create a custom class with only `CmdArgsParser` in the constructor.
 
 ```kotlin
@@ -60,7 +63,7 @@ class MyGameArgs(parser: CmdArgsParser)
 ```
 We are now ready to start defining the args as member properties on this class.
 
-#### Optional args
+### Optional args
 Say we wanted a 'seed' argument for the program, where the user may or may not specify it. This can looks something like this: 
 ```kotlin
 val seed: String? by parser.optionalArg(
@@ -71,7 +74,6 @@ val seed: String? by parser.optionalArg(
 ```
 Breaking this down, `parser.optionalArg()` returns a modified `Lazy` delgate whose initialized value is nullable. So we explicitly define the return type as `String?` and not `String`. The value of the `help` parameter here indicates that if the user does not specify a `--seed` then null will be set and the program can later interpret that to mean generating a random seed for the game instance. The vararg param `keys` allows us to accept either `-s` or its verbose form `--seed` as keys in `args`. Lastly, the `valueLabel` parameter is used by the `--help` command to demonstrate usage of the command eg, `[-s SEED]` 
 
-#### Optional args with defaults
 If we wanted an optional arg to fallback to some default value instead of null, we can change the return type to a non-nullable type `Int` and include a default parameter: 
 ```kotlin
 val numLives: Int by parser.optionalArg(
@@ -82,8 +84,9 @@ val numLives: Int by parser.optionalArg(
 ) 
 ```
 
-#### Casting arg values
-Note in the previous example that `numLives` is an `Int`. In its current state the app would return a `Result.Failure` with a `CmdArgsParseException` and print `error: Failed casting value for member 'numLives' with type kotlin.Int. Did you include the initializer() parameter?`. By default the parser does not handle casting the value of the arg. You must explicity cast them from `String` to the desired type and return it in the `initializer` parameter. You can also optionally add a validation check:   
+### Casting arg values
+Note in the previous example that `numLives` is an `Int`. In its current state the app would return a `Result.Failure` with a `CmdArgsParseException` and print `error: Failed casting value for member 'numLives' with type kotlin.Int. Did you include the initializer() parameter?`. By default the parser does not handle casting the value of the arg. You must explicity cast them from `String` to the desired type and return it in the `initializer` parameter.  
+
 ```kotlin
 val numLives: Int by parser.optionalArg(
     "-l", "--num-lives",
@@ -98,7 +101,7 @@ val numLives: Int by parser.optionalArg(
 ) 
 ```
 
-#### Required args
+### Required args
 Specifying required args is very similar to specifying optional arguments. Make the seed arg required by changing the return type to a non-null `String` and calling `parser.requiredArg()`:
 ```kotlin
 val seed: String by parser.requiredArg(
@@ -108,20 +111,80 @@ val seed: String by parser.requiredArg(
 )
 ```
 
-#### Flag args
-#### Mapped args
-#### Positional args
-#### Configuring help output
-#### Complete example
+### Flag args
+Flags are optionals whose value is either `true` or `false`. These are parsed as `false` if not found in `args`, and `true` otherwise.
+Setup a flag that when declared, enables the use of cheat codes:
+```kotlin
+val cheatsEnabled: Boolean by parser.flagArg(
+    "-c", "--cheats-enabled",
+    help = "Enable use of cheat codes"
+)
+```
+The behavior can be reversed to set cheats enabled by default by specifying the `default` parameter:
+```kotlin
+val cheatsEnabled: Boolean by parser.flagArg(
+    "-c", "--no-cheats",
+    help = "Disable use of cheat codes",
+    default = true
+)
+```
+
+### Mapped args
+Args with a restricted value set can use `parser.optionalMapArg()` or `parser.requiredMapArg()`. The following defines a required arg which maps values "easy", "medium", and "hard" to the enums `Mode.EASY`, `Mode.MEDIUM`, and `Mode.HARD` respectively:
+```kotlin
+val mode: Mode by parser.requiredMapArg(
+    "-m", "--mode",
+    valueLabel = "MODE",
+    help = "Set game mode difficulty",
+    map = mapOf(
+        "easy" to Mode.EASY,
+        "medium" to Mode.MEDIUM,
+        "hard" to Mode.HARD
+    )
+)
+```
+
+### Positional args
+Positional args are declared with `parser.positionalArg()`. Here we define player speed and the path of the path of the save file: 
+```kotlin
+val playerSpeed: Double by parser.positionalArg(
+        valueLabel = "SPEED",
+        help = "Player speed"
+    ) { argString ->
+        argString.toDouble().also {
+        require(it >= 0.0)
+    }
+}
+
+val saveFile: File by parser.positionalArg(
+    valueLabel = "FILE",
+    help = "Save file location"
+) { File(it) }
+```
+The order in which they are declared in the args class matters. For example, the command line should should specify `SPEED` and then `FILE`.
+
+### Configuring help output
+Formatting the `--help` output is limited in the project's current state. However, you may set a prologue or an epilogue statement like so: 
+```kotlin
+class MyGameArgs(parser: CmdArgsParser): CmdArgHelpConfigHolder {
+    override val cmdArgHelpConfig: CmdArgHelpConfig
+        get() = CmdArgHelpConfig(
+	    prologue = "Prologue - A challenging puzzle game all about life",
+	    epilogue = "Epilogue - Have fun!"
+        }
+// ...
+```
+We will see the usage and output of the `--help` command shortly.
+
+### Complete custom args class
 ```kotlin
 class MyGameArgs(parser: CmdArgsParser): CmdArgHelpConfigHolder {
 
-     override val cmdArgHelpConfig: CmdArgHelpConfig
+    override val cmdArgHelpConfig: CmdArgHelpConfig
         get() = CmdArgHelpConfig(
-                prologue = "Prologue - A challenging puzzle game all about life",
-		epilogue = "Epilogue - Have fun!"
-            }
-        )
+	    prologue = "Prologue - A challenging puzzle game all about life",
+	    epilogue = "Epilogue - Have fun!"
+        }
 
     val seed: String? by parser.optionalArg(
         "-s", "--seed",
@@ -173,8 +236,8 @@ class MyGameArgs(parser: CmdArgsParser): CmdArgHelpConfigHolder {
     enum class Mode { EASY, MEDIUM, HARD }
 }
 ```
-
-#### Instantiate the `CmdArgsParser` with `args` and parse `MyGameArgs`
+### Parsing and using the args
+A basic usage looks like this:
 ```kotlin
 val args = arrayOf(
   "-l", "9",
@@ -185,24 +248,30 @@ val args = arrayOf(
   "C:\\Users\\User\\MyGame\\saves"
 )
 
-CmdArgsParser(args, "MyGame.jar").parse(::MyGameArgs)
+CmdArgsParser(args, programName = "MyGame.jar").parse(::MyGameArgs)
 .onSuccess { parsedArgs ->
     handleParsedArgs(parsedArgs)
 }.onFailure {
     // Optionally handle parse failure
 }
 ```
+Observe that an `Array<String> args` has been defined where, according to the configuration of `MyGameArgs`, the player has 9 lives (`-l 9`), cheats are enabled (`--cheats-enabled`), medium difficulty is set (`--mode=medium`), the player has 100.50 speed (SPEED `100.50`), and the save file path is (FILE `C:\\Users\\User\\MyGame\\saves`). These `args` have been passed into the `CmdArgsParser` along with a `programName` which is referenced in the output of the `--help` command. Then, the `parse(::MyGameArgs)` call returns a `Kotlin.Result` where `Result.Success` is only returned when the args are validated and parsed successfully. 
 
-# Formatting `--help` output
-Formatting the `--help` output is limited in the project's current state. However, you may set a prologue or an epilogue statement like so: 
+### Builtin help command
+Running the `--help` command is as simple as providing "--help" as the only arg:
+```kotlin
+val args = arrayOf("--help")
+```
 
-#### Help command output
+**Output**
 ```
 Usage: MyGame.jar
 -m=MODE 
 [-s=SEED] [-l=COUNT] 
 [-c] 
-[--] SPEED FILE 
+[--] SPEED FILE
+
+Prologue - A challenging puzzle game all about life
 
 Required args:                                                                         
 -m MODE, --mode MODE        : Set game mode difficulty                                 
@@ -218,11 +287,22 @@ Optional args:
                                                                                        
 Flag args:                                                                             
 -c, --cheats-enabled        : Enable use of cheat codes (Default false)
+
+Epilogue - Have fun!
 ```
 
-# Exceptions
+### Builtin version command
+Supply "--version" as the only arg. This will print out the value of the `String version` param provided in the `CmdArgsParser`'s constructor. 
+```kotlin
+val args = arrayOf("--version")
+CmdArgsParser(args, programName = "MyGame.jar", version = "MyGame version 1.0").parse(::MyGameArgs)
+```
 
-# Subcommands
+**Output**
+
+`MyGame version 1.0`
+
+## File encryption example with subcommands 
 Example of a file encryption program with 'encrypt' and 'decrypt' subcommands
 
 ```kotlin
@@ -262,7 +342,8 @@ class FileEncryptorArgs(parser: CmdArgsParser) {
 }
 ```
 
-#### `--help` output
+**`--help` output**
+
 ```
 Usage: FileEncryptor.jar
 SUBCOMMAND [ARGS]
@@ -271,6 +352,10 @@ Subcommands:
 encrypt      : Encryption mode                              
 decrypt      : Decryption mode   
 ```
+
+**encrypt subcommand --help output**
+
+# Exceptions
 
 # Tests
 
