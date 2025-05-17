@@ -447,6 +447,7 @@ There are 40+ [unit tests](src/test/kotlin) covering all features and error hand
 - [ ] Customizable `--help` command formatting
 - [ ] Range or other arg validation info in `--help`
 - [ ] Embedded subcommands
+- [ ] Documentation in code comments
 
 ## Contributing
 MRs and creating issues are more than welcome
