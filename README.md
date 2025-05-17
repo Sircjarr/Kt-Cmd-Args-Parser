@@ -406,6 +406,17 @@ Optional args:
 ```
 
 # Exceptions
+The following [CmdArgsParserExcepions](src/main/kotlin/CmdArgsParserExceptions) are used for error handling and debugging and occur in the order provided:
+
+1.`CmdArgsParserInitiaizationException` occurs when there is some issue with creating the args, eg: declaring the same key twice, or providing a key with an invalid format.
+>[!CAUTION]
+>This is the only `Exception` that is thrown at runtime and will not be returned in `Result.Failure` from `CmdArgsParser.parse()`.
+
+2.`CmdArgsBuiltinCommandException` is returned when a builtin command like `--help` or `--version` has been processed.
+
+3.`CmdArgsMalformedException` is returned when the `args` is malformed in some way, eg: unrecognized key, missing arg value, or too many positionals declared.
+
+4.`CmdArgsParseException` occurs at the last step in parsing and is returned when there is an issue with parsing one of the args from `args`, eg: required arg not found, casting failure, or some other error thrown from the `initializer()` param. 
 
 # Tests
 
