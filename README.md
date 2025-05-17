@@ -28,7 +28,9 @@ An easy-to-use command-line argument parser for Kotlin apps. Interprets an `Arra
     - [Parsing and using the args](#parsing-and-using-the-args)
     - [Builtin help command](#builtin-help-command)
     - [Builtin version command](#builtin-version-command)
-- [File encryption example with subcommands](#file-encryption-example-with-subcommands)
+- [Subcommands](#subcommands)
+    - [File encryptor example](#file-encryptor-example)
+    - [Subcommands and help builtin](#subcommands-and-help-builtin)
 - [Exceptions](#exceptions)
 - [Tests](#tests)
 - [Importing the library](#importing-the-library)
@@ -302,48 +304,83 @@ CmdArgsParser(args, programName = "MyGame.jar", version = "MyGame version 1.0").
 
 `MyGame version 1.0`
 
-## File encryption example with subcommands 
-Example of a file encryption program with 'encrypt' and 'decrypt' subcommands
+## Subcommands 
+Often times it is useful to support separate commands within the same program, allowing us to defining different parsing behavior unique to each **subcommand**. The following example shows one such use case.
+
+### File encryptor example
+Example of an args class for a file encryption program supporting 'encrypt' and 'decrypt' subcommands:
 
 ```kotlin
 class FileEncryptorArgs(parser: CmdArgsParser) {
-
     val encryptionArgs: EncryptionArgs? by parser.subparser("encrypt", "Encryption mode", ::EncryptionArgs)
     val decryptionArgs: DecryptionArgs? by parser.subparser("decrypt", "Decryption mode", ::DecryptionArgs)
-
-    // Note that this can be a handy way to cut down on code duplication and share the same args amongst subcommands
-    open class SharedArgs(parser: CmdArgsParser) {
-        val srcFile: File by parser.positionalArg(
-            valueLabel = "SRC",
-            help = "Source file"
-        ) { File(it) }
-
-        val destFile: File by parser.positionalArg(
-            valueLabel = "DEST",
-            help = "Destination file"
-        ) { File(it) }
-    }
-
-    class EncryptionArgs(subparser: CmdArgsParser): SharedArgs(subparser) {
-        val encFileExcludeRegex: Regex? by subparser.optionalArg(
-            "-f", "--enc-filereg",
-            valueLabel = "REGEX",
-            help = "Exclude file regex for encryption"
-        ) { it.toRegex() }
-
-        val encDirExcludeRegex: Regex? by subparser.optionalArg(
-            "-d", "--enc-dirreg",
-            valueLabel = "REGEX",
-            help = "Exclude directory regex for encryption"
-        ) { it.toRegex() }
-    }
-
-    class DecryptionArgs(subparser: CmdArgsParser): SharedArgs(subparser)
 }
 ```
+The method for defining a subcommand is `parser.subparser()`. Note that the return type of this method is a non-nullable `Lazy` delegate `Subcommand` which initializes to another custom args class on parsing. 
 
-**`--help` output**
+**Subcommand args classes**
+```kotlin
+class EncryptionArgs(subparser: CmdArgsParser): SharedArgs(subparser) {
+    val encFileExcludeRegex: Regex? by subparser.optionalArg(
+        "-f", "--enc-filereg",
+        valueLabel = "REGEX",
+        help = "Exclude file regex for encryption"
+    ) { it.toRegex() }
 
+    val encDirExcludeRegex: Regex? by subparser.optionalArg(
+        "-d", "--enc-dirreg",
+        valueLabel = "REGEX",
+        help = "Exclude directory regex for encryption"
+    ) { it.toRegex() }
+}
+
+class DecryptionArgs(subparser: CmdArgsParser): SharedArgs(subparser)
+
+open class SharedArgs(parser: CmdArgsParser) {
+    val srcDir: File by parser.positionalArg(
+        valueLabel = "SRC",
+        help = "Source directory"
+    ) { File(it) }
+
+    val destDir: File by parser.positionalArg(
+        valueLabel = "DEST",
+        help = "Destination directory"
+    ) { File(it) }
+}
+```
+Observe that `EncryptionArgs` supports the unique optionals `encFileExcludeRegex` and `encDirExcludeRegex`. This allows us to optionally exclude certain files or directories when encrypting some `srcDir`. Conversely, both `EncryptionArgs` and `DecryptionArgs` extend the `SharedArgs` custom args class because they both need the positionals `srcDir` and `destDir`. This can be one handy way to share args amongst subcommands and cut down on code duplication. 
+
+**Usage**
+
+Encrypt the contents of the directory `enc_in` ignoring all .txt files and the 'videos' directory and output the contents to `enc_out`:
+```kotlin
+val args = arrayOf(
+    "encrypt",
+    "-f", "^.*\\.txt$",
+    "--enc-dirreg", "^videos$",
+    "enc_in",
+    "enc_out"
+)
+
+val parsedArgs = CmdArgsParser(args, "FileEncryptor.jar").parse(::FileEncryptorArgs).getOrThrow()
+
+if (parsedArgs.encryptionArgs != null) {
+    runEncryption(parsedArgs.encryptionArgs!!)
+} else runDecryption(parsedArgs.decryptionArgs!!)
+```
+Decrypt the contents of `dec_in` and output to `dec_out`:
+```kotlin
+val args = arrayOf(
+    "decrypt",
+    "dec_in",
+    "dec_out"
+)
+```
+
+### Subcommands and help builtin
+`--help` is supported for both the root args and subcommand args.
+
+**`FileEncryptor.jar --help` output**
 ```
 Usage: FileEncryptor.jar
 SUBCOMMAND [ARGS]
@@ -353,7 +390,20 @@ encrypt      : Encryption mode
 decrypt      : Decryption mode   
 ```
 
-**encrypt subcommand --help output**
+**`FileEncryptor.jar encrypt --help` output**
+```
+Usage: FileEncryptor.jar encrypt
+[-f=REGEX] [-d=REGEX] 
+[--] SRC DEST 
+
+Positional args:                                                                                 
+SRC                           : Source file                            
+DEST                          : Destination file                       
+                                                                                                 
+Optional args:                                                                                   
+-f REGEX, --enc-filereg REGEX : Exclude file regex for encryption      
+-d REGEX, --enc-dirreg REGEX  : Exclude directory regex for encryption 
+```
 
 # Exceptions
 
