@@ -405,7 +405,7 @@ Optional args:
 -d REGEX, --enc-dirreg REGEX  : Exclude directory regex for encryption 
 ```
 
-# Exceptions and error logs
+## Exceptions and error logs
 The following [CmdArgsParserExcepions](src/main/kotlin/CmdArgsParserExceptions) are used for error handling and debugging and occur in the order provided:
 
 1.`CmdArgsParserInitiaizationException` occurs when there is some issue with creating the args, eg: declaring the same key twice, or providing a key with an invalid format.
@@ -426,21 +426,24 @@ error: No value specified for arg -x
 error: Positional arg(s) not provided: DEST
 ```
 
-# Tests
+## Tests
+There are 40+ [unit tests](src/test/kotlin) covering all features and error handling.
 
-# Importing the library
+## Importing the library
 
-# Todo
+## Todo
 - [ ] Optional positonals
 - [ ] Arbitrary # of positional args
 - [ ] Arbitrary # of optional values
 - [ ] Bash-style regex string parsing
 - [ ] Customizable `--help` command formatting
 - [ ] Range or other arg validation info in `--help`
-- [ ] Embedded subcommands eg, 
+- [ ] Embedded subcommands
 
-# Contributing
-MRs and creating issues are more than welcome 
+## Contributing
+MRs and creating issues are more than welcome
 
-# Aknowledgement
-Thanks to [kotlin-argparser](https://github.com/xenomachina/kotlin-argparser) for the inspiration of this project
+## Aknowledgement
+Thanks to [kotlin-argparser](https://github.com/xenomachina/kotlin-argparser) for the inspiration of this project.
+
+If this project caught your interest enough to star or contribute in any way — thank you!
