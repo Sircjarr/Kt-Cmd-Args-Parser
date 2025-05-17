@@ -2,7 +2,7 @@ plugins {
     kotlin("jvm")
 }
 
-group = "org.example"
+group = "com.github.sircjarr"
 version = "1.0-SNAPSHOT"
 
 repositories {

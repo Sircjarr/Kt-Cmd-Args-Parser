@@ -7,13 +7,9 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$/../kt-apps" />
-            <option value="$PROJECT_DIR$/../kt-apps/lib-cmd-args-parse" />
             <option value="$PROJECT_DIR$/../kt-apps/lib-logger" />
           </set>
         </option>
-      </GradleProjectSettings>
-      <GradleProjectSettings>
-        <option name="externalProjectPath" value="$PROJECT_DIR$/../kt-apps/lib-cmd-args-parse" />
       </GradleProjectSettings>
       <GradleProjectSettings>
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
