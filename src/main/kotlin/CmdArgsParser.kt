@@ -1,15 +1,15 @@
-package lib.lib_args_parse
+package com.github.sircjarr.cmdargsparser
 
-import lib.lib_args_parse.exception.CmdArgsBuiltinCommandException
-import lib.lib_args_parse.exception.CmdArgsParseException
-import lib.lib_args_parse.exception.CmdArgsParserInitializationException
-import lib.lib_args_parse.exception.CmdArgsMalformedException
-import lib.lib_args_parse.help.CmdArgHelpConfig
-import lib.lib_args_parse.help.CmdArgHelpConfigHolder
-import lib.lib_args_parse.help.CmdArgsParserHelpPrinter
-import lib.lib_args_parse.model.CmdArgNonNull
-import lib.lib_args_parse.model.CmdArgNullable
-import lib.lib_args_parse.model.Subcommand
+import com.github.sircjarr.cmdargsparser.exception.CmdArgsBuiltinCommandException
+import com.github.sircjarr.cmdargsparser.exception.CmdArgsParseException
+import com.github.sircjarr.cmdargsparser.exception.CmdArgsParserInitializationException
+import com.github.sircjarr.cmdargsparser.exception.CmdArgsMalformedException
+import com.github.sircjarr.cmdargsparser.help.CmdArgHelpConfig
+import com.github.sircjarr.cmdargsparser.help.CmdArgHelpConfigHolder
+import com.github.sircjarr.cmdargsparser.help.CmdArgsParserHelpPrinter
+import com.github.sircjarr.cmdargsparser.model.CmdArgNonNull
+import com.github.sircjarr.cmdargsparser.model.CmdArgNullable
+import com.github.sircjarr.cmdargsparser.model.Subcommand
 import java.lang.reflect.InvocationTargetException
 import kotlin.reflect.full.declaredMembers
 

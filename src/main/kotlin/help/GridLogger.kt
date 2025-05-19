@@ -1,4 +1,4 @@
-package lib.lib_args_parse.help
+package com.github.sircjarr.cmdargsparser.help
 
 private const val FILL_NULL = "null"
 private const val FIELD_PADDING_SIZE = 1

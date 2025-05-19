@@ -1,5 +1,5 @@
 import args.FileEncryptorArgs
-import lib.lib_args_parse.CmdArgsParser
+import com.github.sircjarr.cmdargsparser.CmdArgsParser
 import kotlin.test.*
 
 class CmdArgsSubparserTest {

@@ -1,6 +1,6 @@
 package args
 
-import lib.lib_args_parse.CmdArgsParser
+import com.github.sircjarr.cmdargsparser.CmdArgsParser
 import java.io.File
 
 class MyGameArgs(parser: CmdArgsParser) {

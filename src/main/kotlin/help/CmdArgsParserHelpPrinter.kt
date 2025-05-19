@@ -1,8 +1,8 @@
-package lib.lib_args_parse.help
+package com.github.sircjarr.cmdargsparser.help
 
-import lib.lib_args_parse.model.CmdArgNonNull
-import lib.lib_args_parse.model.CmdArgNullable
-import lib.lib_args_parse.model.Subcommand
+import com.github.sircjarr.cmdargsparser.model.CmdArgNonNull
+import com.github.sircjarr.cmdargsparser.model.CmdArgNullable
+import com.github.sircjarr.cmdargsparser.model.Subcommand
 
 private const val CHAR_TABLE_SEPARATOR = ":"
 

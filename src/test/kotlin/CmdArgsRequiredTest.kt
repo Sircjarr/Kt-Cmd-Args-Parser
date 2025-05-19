@@ -1,5 +1,5 @@
-import lib.lib_args_parse.CmdArgsParser
-import lib.lib_args_parse.exception.CmdArgsParseException
+import com.github.sircjarr.cmdargsparser.CmdArgsParser
+import com.github.sircjarr.cmdargsparser.exception.CmdArgsParseException
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.fail

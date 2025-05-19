@@ -1,8 +1,8 @@
 package args
 
-import lib.lib_args_parse.CmdArgsParser
-import lib.lib_args_parse.help.CmdArgHelpConfig
-import lib.lib_args_parse.help.CmdArgHelpConfigHolder
+import com.github.sircjarr.cmdargsparser.CmdArgsParser
+import com.github.sircjarr.cmdargsparser.help.CmdArgHelpConfig
+import com.github.sircjarr.cmdargsparser.help.CmdArgHelpConfigHolder
 import java.io.File
 
 class FileEncryptorArgs(parser: CmdArgsParser): CmdArgHelpConfigHolder {

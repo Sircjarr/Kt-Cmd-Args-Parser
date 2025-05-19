@@ -1,6 +1,6 @@
 import args.CmdArgsParserStressTestArgs
-import lib.lib_args_parse.CmdArgsParser
-import lib.lib_args_parse.exception.CmdArgsBuiltinCommandException
+import com.github.sircjarr.cmdargsparser.CmdArgsParser
+import com.github.sircjarr.cmdargsparser.exception.CmdArgsBuiltinCommandException
 import kotlin.test.*
 
 private const val PROGRAM_NAME = "CmdArgsBuiltinCommandsTest.kt"

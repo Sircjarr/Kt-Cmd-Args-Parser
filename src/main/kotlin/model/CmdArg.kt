@@ -1,4 +1,4 @@
-package lib.lib_args_parse.model
+package com.github.sircjarr.cmdargsparser.model
 
 sealed class CmdArgNullable<T>(
     val help: String,

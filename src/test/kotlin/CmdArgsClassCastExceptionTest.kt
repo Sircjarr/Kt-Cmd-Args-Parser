@@ -1,4 +1,4 @@
-import lib.lib_args_parse.CmdArgsParser
+import com.github.sircjarr.cmdargsparser.CmdArgsParser
 import org.junit.jupiter.api.Test
 import kotlin.test.fail
 

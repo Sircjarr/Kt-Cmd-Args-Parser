@@ -1,4 +1,4 @@
-package lib.lib_args_parse.help
+package com.github.sircjarr.cmdargsparser.help
 
 data class CmdArgHelpConfig(
     var epilogue: String? = null,

@@ -1,6 +1,6 @@
 import args.CmdArgsParserStressTestArgs
 import args.MyGameArgs
-import lib.lib_args_parse.CmdArgsParser
+import com.github.sircjarr.cmdargsparser.CmdArgsParser
 import kotlin.test.*
 
 class CmdArgsParserTest {

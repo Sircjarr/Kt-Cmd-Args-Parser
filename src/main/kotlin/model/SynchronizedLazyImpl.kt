@@ -1,4 +1,4 @@
-package lib.lib_args_parse.model
+package com.github.sircjarr.cmdargsparser.model
 
 // Borrowed implementation from builtin Kotlin Lazy delegate
 open class SynchronizedLazyImpl<T>(

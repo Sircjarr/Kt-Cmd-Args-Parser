@@ -1,4 +1,4 @@
-package lib.lib_args_parse.exception
+package com.github.sircjarr.cmdargsparser.exception
 
 class CmdArgsParserInitializationException(e: Exception) : IllegalArgumentException(e)
 class CmdArgsMalformedException(e: Exception) : IllegalArgumentException(e)
