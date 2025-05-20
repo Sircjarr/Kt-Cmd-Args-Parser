@@ -69,7 +69,7 @@ val seed: String? by parser.optionalArg(
     help = "Seed for the game instance. Uses random seed if not set.",
 )
 ```
-Breaking this down, `parser.optionalArg()` returns a modified `Lazy` delegate, [CmdArgNullable.KeyValue](src/main/kotlin/model/CmdArg.kt), whose `initializer` resolves to a nullable generic type. So we explicitly define the return type as `String?` and not `String`. The value of the `help` parameter here indicates that if the user does not specify a `--seed` then null will be set and the program can later interpret that to mean generating a random seed for the game instance. The vararg param `keys` allows us to accept either `-s` or its verbose form `--seed` as keys in `args`. Lastly, the `valueLabel` parameter is used by the `--help` command to demonstrate usage of the command eg, `[-s SEED]` 
+Breaking this down, the `optionalArg` method returns a modified `Lazy` delegate, [CmdArgNullable.KeyValue](src/main/kotlin/model/CmdArg.kt), whose `initializer` resolves to a nullable generic type. So we explicitly define the return type as `String?` and not `String`. The value of the `help` parameter here indicates that if the user does not specify a `--seed` then null will be set and the program can later interpret that to mean generating a random seed for the game instance. The vararg param `keys` allows us to accept either `-s` or its verbose form `--seed` as keys in `args`. Lastly, the `valueLabel` parameter is used by the `--help` command to demonstrate usage of the command eg, `[-s SEED]` 
 
 If we wanted an optional arg to fallback to some default value instead of null, we can change the return type to a non-nullable type `Int` and include a default parameter: 
 ```kotlin
@@ -99,7 +99,7 @@ val numLives: Int by parser.optionalArg(
 ```
 
 ### Required args
-Specifying required args is very similar to specifying optional arguments. Make the seed arg required by changing the return type to a non-null `String` and calling `parser.requiredArg()`:
+Specifying required args is very similar to specifying optional arguments. Make the seed arg required by changing the return type to a non-null `String` and calling `requiredArg`:
 ```kotlin
 val seed: String by parser.requiredArg(
     "-s", "--seed",
@@ -127,7 +127,7 @@ val cheatsEnabled: Boolean by parser.flagArg(
 ```
 
 ### Mapped args
-Args with a restricted value set can use `parser.optionalMapArg()` or `parser.requiredMapArg()`. The following defines a required arg which maps values "easy", "medium", and "hard" to the enums `Mode.EASY`, `Mode.MEDIUM`, and `Mode.HARD` respectively:
+Args with a restricted value set can use the methods `optionalMapArg` or `requiredMapArg`. The following defines a required arg which maps values "easy", "medium", and "hard" to the enums `Mode.EASY`, `Mode.MEDIUM`, and `Mode.HARD` respectively:
 ```kotlin
 val mode: Mode by parser.requiredMapArg(
     "-m", "--mode",
@@ -142,7 +142,7 @@ val mode: Mode by parser.requiredMapArg(
 ```
 
 ### Positional args
-Positional args are declared with `parser.positionalArg()`. Here we define player speed and the path of the path of the save file: 
+Positional args are declared with the `positionalArg` method. Here we define player speed and the path of the path of the save file: 
 ```kotlin
 val playerSpeed: Double by parser.positionalArg(
         valueLabel = "SPEED",
@@ -319,7 +319,7 @@ class FileEncryptorArgs(parser: CmdArgsParser) {
     )
 }
 ```
-The method for defining a subcommand is `parser.subparser()`. The return type of this method is a non-nullable `Lazy` delegate `Subcommand` which initializes to another custom args class on parsing. 
+The method for defining a subcommand is `subparser`. The return type of this method is a non-nullable `Lazy` delegate `Subcommand` which initializes to another custom args class on parsing. 
 
 **Subcommand args classes**
 ```kotlin
@@ -413,13 +413,13 @@ The following [CmdArgsParserExcepions](src/main/kotlin/exception/CmdArgsParserEx
 
 1.`CmdArgsParserInitiaizationException` occurs when there is some issue with creating the args, eg: declaring the same key twice, or providing a key with an invalid format.
 >[!CAUTION]
->This is the only `Exception` that is thrown at runtime and will not be returned in `Result.Failure` from `CmdArgsParser.parse()`.
+>This is the only `Exception` that is thrown at runtime and will not be returned in `Result.Failure` from the `parse` method.
 
 2.`CmdArgsBuiltinCommandException` is returned when a builtin command like `--help` or `--version` has been processed.
 
 3.`CmdArgsMalformedException` is returned when the `args` is malformed in some way, eg: unrecognized key, missing arg value, or too many positionals declared.
 
-4.`CmdArgsParseException` occurs at the last step in parsing and is returned when there is an issue with parsing one of the args from `args`, eg: required arg not found, casting failure, or some other error thrown from the `initializer()` param. 
+4.`CmdArgsParseException` occurs at the last step in parsing and is returned when there is an issue with parsing one of the args from `args`, eg: required arg not found, casting failure, or some other error thrown from the `initializer` param. 
 
 ---
 If either `CmdArgsMalformedException` or `CmdArgsParseException` occur, the program will print out a concise single-line error statement. Some example logs:
