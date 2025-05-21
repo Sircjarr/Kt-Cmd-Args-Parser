@@ -15,6 +15,13 @@ import kotlin.reflect.full.declaredMembers
 
 private const val OPTIONS_POSITIONALS_ARGS_DELIM = "--"
 
+/**
+ * A command-line argument parser.
+ *
+ * @property args The command-line arguments.
+ * @property programName The name of the program printed in the `--help` command output.
+ * @property version The version of the program printed in the `--version` command output.
+ */
 @Suppress("UNCHECKED_CAST")
 class CmdArgsParser(
     private val args: Array<String>,
@@ -47,6 +54,18 @@ class CmdArgsParser(
     private val quitRegex = "q|quit|exit|--quit|--exit".toRegex()
     private val subcommandRegex = "[a-zA-Z0-9]+".toRegex()
 
+    /**
+     * Add an optional argument to this class.
+     * - Falls back to `null` if not found in [args].
+     *
+     * @param keys Valid keys for this arg starting with either "-" or "--".
+     * @param valueLabel Arg value label to be used by the `--help` command. For example, [-i INCLUDE].
+     * @param help Description of this arg shown in the output of the `--help` command.
+     * @param initializer Function to cast and validate the arg value to desired type.
+     * @return [CmdArgNullable.KeyValue.Single]
+     * @throws [CmdArgsParserInitializationException] if any [keys] have invalid format, are the same as a builtin
+     * command, or already declared.
+     */
     fun <T> optionalArg(
         vararg keys: String,
         valueLabel: String,
@@ -72,6 +91,19 @@ class CmdArgsParser(
         }
     }
 
+    /**
+     * Add an optional argument to this class.
+     * - Falls back to [default] if not found in [args].
+     *
+     * @param keys Valid keys for this arg starting with either "-" or "--".
+     * @param default Default value to return if not found in [args].
+     * @param valueLabel Arg value label to be used by the `--help` command. For example, [-i INCLUDE].
+     * @param help Description of this arg shown in the output of the `--help` command.
+     * @param initializer Function to cast and validate the arg value to desired type.
+     * @return [CmdArgNonNull.KeyValue.Single]
+     * @throws [CmdArgsParserInitializationException] if any [keys] have invalid format, are the same as a builtin
+     * command, or already declared.
+     */
     fun <T> optionalArg(
         vararg keys: String,
         default: T,
@@ -99,6 +131,18 @@ class CmdArgsParser(
         }
     }
 
+    /**
+     * Add a required argument to this class.
+     * - [parse] returns [Result.Failure] with [CmdArgsParseException] if not declared in [args].
+     *
+     * @param keys Valid keys for this arg starting with either "-" or "--".
+     * @param valueLabel Arg value label to be used by the `--help` command. For example, [-i INCLUDE].
+     * @param help Description of this arg shown in the output of the `--help` command.
+     * @param initializer Function to cast and validate the arg value to desired type.
+     * @return [CmdArgNonNull.KeyValue.Single]
+     * @throws [CmdArgsParserInitializationException] if any [keys] have invalid format, are the same as a builtin
+     * command, or already declared.
+     */
     fun <T> requiredArg(
         vararg keys: String,
         valueLabel: String,
@@ -123,6 +167,18 @@ class CmdArgsParser(
         }
     }
 
+    /**
+     * Add an optional argument with restricted values to this class.
+     * - Falls back to `null` if not found in [args].
+     *
+     * @param keys Valid keys for this arg starting with either "-" or "--".
+     * @param valueLabel Arg value label to be used by the `--help` command. For example, [-m MODE].
+     * @param help Description of this arg shown in the output of the `--help` command.
+     * @param map Map of possible values to desired object.
+     * @return [CmdArgNullable.KeyValue.Mapped]
+     * @throws [CmdArgsParserInitializationException] if any [keys] have invalid format, are the same as a builtin
+     * command, or already declared.
+     */
     fun <T> optionalMappedArg(
         vararg keys: String,
         valueLabel: String,
@@ -151,6 +207,19 @@ class CmdArgsParser(
         }
     }
 
+    /**
+     * Add an optional argument with restricted values to this class.
+     * - Falls back to [default] if not found in [args].
+     *
+     * @param keys Valid keys for this arg starting with either "-" or "--".
+     * @param default Default value to return if not found in [args].
+     * @param valueLabel Arg value label to be used by the `--help` command. For example, [-m MODE].
+     * @param help Description of this arg shown in the output of the `--help` command.
+     * @param map Map of possible values to desired object.
+     * @return [CmdArgNonNull.KeyValue.Mapped]
+     * @throws [CmdArgsParserInitializationException] if any [keys] have invalid format, are the same as a builtin
+     * command, or already declared.
+     */
     fun <T> optionalMappedArg(
         vararg keys: String,
         default: T,
@@ -181,6 +250,19 @@ class CmdArgsParser(
         }
     }
 
+    /**
+     * Add a required argument with restricted values to this class.
+     * - [parse] returns [Result.Failure] with [CmdArgsParseException] if not found in [args].
+     *
+     * @param keys Valid keys for this arg starting with either "-" or "--".
+     * @param default Default value to return if not found in [args].
+     * @param valueLabel Arg value label to be used by the `--help` command. For example, [-m MODE].
+     * @param help Description of this arg shown in the output of the `--help` command.
+     * @param map Map of possible values to desired object.
+     * @return [CmdArgNullable.KeyValue.Mapped]
+     * @throws [CmdArgsParserInitializationException] if any [keys] have invalid format, are the same as a builtin
+     * command, or already declared.
+     */
     fun <T> requiredMapArg(
         vararg keys: String,
         valueLabel: String,
@@ -210,6 +292,17 @@ class CmdArgsParser(
         }
     }
 
+    /**
+     * Add an optional flag argument that maps to a `Boolean`.
+     * - Falls back to [default] if not declared in [args].
+     *
+     * @param keys Valid keys for this arg starting with either "-" or "--".
+     * @param help Description of this arg shown in the output of the `--help` command.
+     * @param default Default value to return if not found in [args].
+     * @return [CmdArgNonNull.Flag]
+     * @throws [CmdArgsParserInitializationException] if any [keys] have invalid format, are the same as a builtin
+     * command, or already declared.
+     */
     fun flagArg(
         vararg keys: String,
         help: String,
@@ -236,6 +329,16 @@ class CmdArgsParser(
         }
     }
 
+    /**
+     * Add a required positional argument to this class.
+     * - [parse] returns [Result.Failure] with [CmdArgsParseException] if not specified in [args].
+     * - Options and positional args may be separated with "--".
+     *
+     * @param valueLabel Arg value label to be used by the `--help` command. For example, [-m MODE].
+     * @param help Description of this arg shown in the output of the `--help` command.
+     * @param initializer Function to cast and validate the arg value to desired type.
+     * @return [CmdArgNullable.KeyValue.Mapped]
+     */
     fun <T> positionalArg(
         valueLabel: String,
         help: String,
@@ -256,7 +359,22 @@ class CmdArgsParser(
         }
     }
 
-    fun <T> subparser(subcommand: String, help: String, creator: (CmdArgsParser) -> T): Subcommand<T?> {
+    /**
+     * Add a new subcommand to this class. Internally parses the args in [creator] the same way with a new
+     * [CmdArgsParser] instance.
+     *
+     * @param subcommand Name of the subcommand.
+     * @param help Description of this subcommand shown in the output of the `--help` command.
+     * @param creator Initializer of the custom args class.
+     * @return [Subcommand] Where the resolved value will be `null` if [subcommand] is not found in [args], or a
+     * non-null custom args class if parsing was successful.
+     * @throws [CmdArgsParserInitializationException] if [subcommand] is of invalid format or already declared.
+     */
+    fun <T> subparser(
+        subcommand: String,
+        help: String,
+        creator: (CmdArgsParser) -> T
+    ): Subcommand<T?> {
         validateSubcommand(subcommand)
 
         return if (args.firstOrNull() == subcommand) {
@@ -325,6 +443,16 @@ class CmdArgsParser(
         }
     }
 
+    /**
+     * Parse [args] into desired type [T].
+     *
+     * @param creator Initializer of the custom args class.
+     * @return [Result] where [Result.isSuccess] implies stable, valid args have been parsed. [Result.Failure]
+     * contains one of the custom [Exception] classes.
+     * @see CmdArgsBuiltinCommandException
+     * @see CmdArgsMalformedException
+     * @see CmdArgsParseException
+     */
     fun <T> parse(creator: (CmdArgsParser) -> T): Result<T> {
         if (parseResult != null) {
             return parseResult as Result<T>
