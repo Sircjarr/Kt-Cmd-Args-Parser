@@ -382,7 +382,7 @@ class CmdArgsParser(
     }
 
     private fun printParseError(t: Throwable) {
-        println("error: ${t.message}")
+        System.err.println("error: ${t.message}")
     }
 
     private fun printVersion() {
