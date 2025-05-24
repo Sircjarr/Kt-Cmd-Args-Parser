@@ -1,4 +1,5 @@
-## Description
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
 An easy-to-use command-line argument parser for Kotlin apps. Interprets an `Array<String>`, `args`, formatted in a familiar syntax and serializes a valid, stable object of arguments to be coveniently read in any given program.
 
 ## Features
@@ -36,7 +37,7 @@ An easy-to-use command-line argument parser for Kotlin apps. Interprets an `Arra
 - [Importing the library](#importing-the-library)
 - [Todo](#todo)
 - [Contributing](#contributing)
-- [Aknowledgement](#aknowledgement)
+- [Aknowledgements](#star-aknowledgements)
 
 ---
 
@@ -61,7 +62,7 @@ class MyGameArgs(parser: CmdArgsParser)
 We are now ready to start defining the args as member properties on this class.
 
 ### Optional args
-Say we wanted a 'seed' argument for the program, where the user may or may not specify it. This can looks something like this: 
+Say we wanted a 'seed' argument for the program, where the user may or may not specify it. This can look something like this: 
 ```kotlin
 val seed: String? by parser.optionalArg(
     "-s", "--seed",
