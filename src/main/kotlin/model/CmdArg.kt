@@ -1,5 +1,7 @@
 package com.github.sircjarr.cmdargsparser.model
 
+import com.github.sircjarr.cmdargsparser.lib.kotlinstdlib.SynchronizedLazyImpl
+
 /**
  * Nullable [SynchronizedLazyImpl] command argument for optionals.
  */

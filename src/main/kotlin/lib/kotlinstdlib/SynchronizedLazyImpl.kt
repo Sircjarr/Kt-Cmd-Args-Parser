@@ -1,12 +1,18 @@
 /*
  * Copyright 2010-2018 JetBrains s.r.o. and Kotlin Programming Language contributors.
- * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
+ * Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE.txt file.
  */
 
-package com.github.sircjarr.cmdargsparser.model
+package com.github.sircjarr.cmdargsparser.lib.kotlinstdlib
+
+import com.github.sircjarr.cmdargsparser.model.*
 
 /**
- * Borrowed from [kotlin.SynchronizedLazyImpl].
+ * [kotlin.SynchronizedLazyImpl] copied and made open for extension.
+ *
+ * @see CmdArgNullable
+ * @see CmdArgNonNull
+ * @see Subcommand
  */
 open class SynchronizedLazyImpl<T>(
     initializer: () -> T,
