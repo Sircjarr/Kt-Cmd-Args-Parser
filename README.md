@@ -1,5 +1,6 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Maven Central](https://img.shields.io/maven-central/v/com.github.sircjarr.cmdargsparser/kt-cmd-args-parser.svg)](https://mvnrepository.com/artifact/com.github.sircjarr.cmdargsparser/kt-cmd-args-parser)
+[![javadoc](https://javadoc.io/badge2/com.github.sircjarr.cmdargsparser/kt-cmd-args-parser/javadoc.svg)](https://javadoc.io/doc/com.github.sircjarr.cmdargsparser/kt-cmd-args-parser)
 ![kotlin-version](https://img.shields.io/badge/kotlin-2.1.0-purple)
 
 An easy-to-use command-line argument parser for Kotlin apps. Interprets an `Array<String>`, `args`, formatted in a familiar syntax and serializes a valid, stable object of arguments to be coveniently read in any given program.
