@@ -1,4 +1,5 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Maven Central](https://img.shields.io/maven-central/v/com.github.sircjarr.cmdargsparser/kt-cmd-args-parser.svg)](https://mvnrepository.com/artifact/com.github.sircjarr.cmdargsparser/kt-cmd-args-parser)
 
 An easy-to-use command-line argument parser for Kotlin apps. Interprets an `Array<String>`, `args`, formatted in a familiar syntax and serializes a valid, stable object of arguments to be coveniently read in any given program.
 
@@ -434,6 +435,28 @@ error: Positional arg(s) not provided: DEST
 There are 40+ [unit tests](src/test/kotlin) covering all features and error handling.
 
 ## Importing the library
+### Gradle
+```kts
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
+dependencies {
+    implementation "com.github.sircjarr.cmdargsparser:kt-cmd-args-parser:1.0-SNAPSHOT"
+}
+```
+
+### Maven
+Add this to pom.xml:
+```xml
+<dependency>
+  <groupId>com.github.sircjarr.cmdargsparser</groupId>
+  <artifactId>kt-cmd-args-parser</artifactId>
+  <version>1.0-SNAPSHOT</version>
+</dependency>
+```
 
 ## Todo
 - [ ] Optional positonals
