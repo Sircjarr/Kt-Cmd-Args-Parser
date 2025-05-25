@@ -446,7 +446,7 @@ buildscript {
 }
 
 dependencies {
-    implementation "com.github.sircjarr.cmdargsparser:kt-cmd-args-parser:1.0-SNAPSHOT"
+    implementation "com.github.sircjarr.cmdargsparser:kt-cmd-args-parser:1.0.0"
 }
 ```
 
@@ -456,7 +456,7 @@ Add this to pom.xml:
 <dependency>
   <groupId>com.github.sircjarr.cmdargsparser</groupId>
   <artifactId>kt-cmd-args-parser</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.0</version>
 </dependency>
 ```
 
