@@ -441,6 +441,10 @@ There are 40+ [unit tests](src/test/kotlin) covering all features and error hand
 ## Importing the library
 ### Gradle
 ```kts
+repositories {
+    mavenCentral()
+}
+
 dependencies {
     implementation "com.github.sircjarr.cmdargsparser:kt-cmd-args-parser:1.0.0"
 }
