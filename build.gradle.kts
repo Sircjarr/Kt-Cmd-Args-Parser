@@ -16,10 +16,12 @@
 
 plugins {
     kotlin("jvm")
+
+    id("maven-publish")
 }
 
-group = "com.github.sircjarr"
-version = "1.0-SNAPSHOT"
+group = "com.github.sircjarr.cmdargsparser"
+version = "0.1.0"
 
 repositories {
     mavenCentral()
@@ -32,4 +34,29 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "Kt-Cmd-Args-Parser"
+            url = uri("https://maven.pkg.github.com/Sircjarr/Kt-Cmd-Args-Parser")
+            credentials {
+                username = project.findProperty("gpr.user") as String?
+                    ?: System.getenv("USERNAME")
+                password = project.findProperty("gpr.key") as String?
+                    ?: System.getenv("TOKEN")
+            }
+        }
+    }
+
+    publications {
+        register<MavenPublication>("gpr") {
+            from(components["java"])
+            description = "A simple but powerful command-line argument parser for Kotlin apps."
+            version = rootProject.version.toString()
+            artifactId = rootProject.name
+            groupId = rootProject.group.toString()
+        }
+    }
 }
