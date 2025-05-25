@@ -18,6 +18,7 @@ plugins {
     kotlin("jvm")
 
     id("maven-publish")
+    id("org.jetbrains.dokka") version "2.0.0"
 }
 
 group = "com.github.sircjarr.cmdargsparser"
@@ -30,6 +31,10 @@ repositories {
 dependencies {
     implementation(kotlin("reflect"))
     testImplementation(kotlin("test"))
+}
+
+allprojects {
+    apply(plugin = "org.jetbrains.dokka")
 }
 
 tasks.test {
