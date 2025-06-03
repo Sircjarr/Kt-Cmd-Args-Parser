@@ -17,6 +17,7 @@
 import args.CmdArgsParserStressTestArgs
 import args.MyGameArgs
 import com.github.sircjarr.cmdargsparser.CmdArgsParser
+import java.io.File
 import kotlin.test.*
 
 class CmdArgsParserTest {
@@ -159,13 +160,16 @@ class CmdArgsParserTest {
 
     @Test
     fun gameExample() {
+        val sep = File.separator
+        val filePath = "C:${sep}Users${sep}User${sep}MyGame${sep}saves"
+
         val args = arrayOf(
             "-l", "9",
             "--cheats-enabled",
             "--mode=medium",
             "--",
             "100.50",
-            "C:\\Users\\User\\MyGame\\saves"
+            filePath
         )
 
         CmdArgsParser(args, "MyGame.jar").parse(::MyGameArgs).onSuccess { myGameArgs ->
@@ -174,7 +178,7 @@ class CmdArgsParserTest {
             assertTrue(myGameArgs.cheatsEnabled)
             assertEquals(myGameArgs.mode, MyGameArgs.Mode.MEDIUM)
             assertEquals(myGameArgs.playerSpeed, 100.50)
-            assertEquals(myGameArgs.saveFile.absolutePath, "C:\\Users\\User\\MyGame\\saves")
+            assert(myGameArgs.saveFile.absolutePath.endsWith(filePath))
         }.onFailure {
             // Optionally handle failure
         }

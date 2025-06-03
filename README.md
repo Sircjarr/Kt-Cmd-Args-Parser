@@ -1,5 +1,7 @@
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+![GitHub CI](https://github.com/Sircjarr/Kt-Cmd-Args-Parser/actions/workflows/gradle.yml/badge.svg)
+![Coverage](.github/badges/jacoco.svg)
 ![kotlin-version](https://img.shields.io/badge/kotlin-2.1.0-purple)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 <!-- WIP 
 [![Maven Central](https://img.shields.io/maven-central/v/com.github.sircjarr.cmdargsparser/kt-cmd-args-parser.svg)](https://mvnrepository.com/artifact/com.github.sircjarr.cmdargsparser/kt-cmd-args-parser)
 [![javadoc](https://javadoc.io/badge2/com.github.sircjarr.cmdargsparser/kt-cmd-args-parser/javadoc.svg)](https://javadoc.io/doc/com.github.sircjarr.cmdargsparser/kt-cmd-args-parser)

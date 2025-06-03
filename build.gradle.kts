@@ -16,7 +16,7 @@
 
 plugins {
     kotlin("jvm")
-
+    id("jacoco")
     id("maven-publish")
     id("org.jetbrains.dokka") version "2.0.0"
 }
@@ -33,12 +33,26 @@ dependencies {
     testImplementation(kotlin("test"))
 }
 
+jacoco {
+    toolVersion = "0.8.13"
+}
+
 allprojects {
     apply(plugin = "org.jetbrains.dokka")
 }
 
 tasks.test {
     useJUnitPlatform()
+    finalizedBy(tasks.jacocoTestReport)
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+    reports {
+        xml.required = false
+        csv.required = true
+        html.outputLocation = layout.buildDirectory.dir("reports/jacoco")
+    }
 }
 
 publishing {
