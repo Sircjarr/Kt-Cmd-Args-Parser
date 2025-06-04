@@ -1,5 +1,6 @@
 ![GitHub CI](https://github.com/Sircjarr/Kt-Cmd-Args-Parser/actions/workflows/gradle.yml/badge.svg)
 ![Coverage](.github/badges/jacoco.svg)
+[![CodeQL](https://github.com/Sircjarr/Kt-Cmd-Args-Parser/workflows/CodeQL/badge.svg)](https://github.com/Sircjarr/Kt-Cmd-Args-Parser/actions?query=workflow%3ACodeQL "Code quality workflow status")
 ![kotlin-version](https://img.shields.io/badge/kotlin-2.1.0-purple)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 <!-- WIP 
