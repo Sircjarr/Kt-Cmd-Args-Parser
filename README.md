@@ -1,8 +1,8 @@
-[![JitPack](https://jitpack.io/1.0.0/Sircjarr/Kt-Cmd-Args-Parser.svg)]("https://jitpack.io/Sircjarr/Kt-Cmd-Args-Parser")
+[![JitPack](https://jitpack.io/v/Sircjarr/Kt-Cmd-Args-Parser.svg)]("https://jitpack.io/#Sircjarr/Kt-Cmd-Args-Parser")
 ![GitHub CI](https://github.com/Sircjarr/Kt-Cmd-Args-Parser/actions/workflows/gradle.yml/badge.svg)
 ![Coverage](.github/badges/jacoco.svg)
 [![CodeQL](https://github.com/Sircjarr/Kt-Cmd-Args-Parser/workflows/CodeQL/badge.svg)](https://github.com/Sircjarr/Kt-Cmd-Args-Parser/actions?query=workflow%3ACodeQL "Code quality workflow status")
-[![Javadoc](https://img.shields.io/badge/javadoc-1.0.0-red)](https://jitpack.io/com/github/Sircjarr/Kt-Cmd-Args-Parser/1.0.0/javadoc/)
+[![Javadoc](https://img.shields.io/badge/javadoc-1.0.0-red)](https://jitpack.io/com/github/Sircjarr/Kt-Cmd-Args-Parser/latest/javadoc/)
 ![kotlin-version](https://img.shields.io/badge/kotlin-2.1.0-purple)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 <!-- WIP 
