@@ -419,7 +419,7 @@ Optional args:
 ```
 
 ## Exceptions and error logs
-The following [CmdArgsParserExcepions](src/main/kotlin/exception/CmdArgsParserExceptions.kt) are used for error handling and debugging and occur in the order provided:
+The following [CmdArgsParserExceptions](src/main/kotlin/exception/CmdArgsParserExceptions.kt) are used for error handling and debugging and occur in the order provided:
 
 1.`CmdArgsParserInitiaizationException` occurs when there is some issue with creating the args, eg: declaring the same key twice, or providing a key with an invalid format.
 >[!CAUTION]
