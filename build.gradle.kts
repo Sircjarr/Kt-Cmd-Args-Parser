@@ -75,6 +75,9 @@ publishing {
             version = rootProject.version.toString()
             artifactId = rootProject.name
             groupId = rootProject.group.toString()
+            afterEvaluate {
+                artifact(tasks["dokkaJavadocJar"])
+            }
         }
     }
 }
