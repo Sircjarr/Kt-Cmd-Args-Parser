@@ -1,5 +1,5 @@
-[![JitPack](https://jitpack.io/v/Sircjarr/Kt-Cmd-Args-Parser.svg)]("https://jitpack.io/#Sircjarr/Kt-Cmd-Args-Parser")
-![GitHub CI](https://github.com/Sircjarr/Kt-Cmd-Args-Parser/actions/workflows/gradle.yml/badge.svg)
+[![JitPack](https://jitpack.io/v/Sircjarr/Kt-Cmd-Args-Parser.svg)]("https://jitpack.io/#Sircjarr/Kt-Cmd-Args-Parser" "Latest release")
+![GitHub CI](https://github.com/Sircjarr/Kt-Cmd-Args-Parser/actions/workflows/gradle.yml/badge.svg "Build and test status")
 ![Coverage](.github/badges/jacoco.svg)
 [![CodeQL](https://github.com/Sircjarr/Kt-Cmd-Args-Parser/workflows/CodeQL/badge.svg)](https://github.com/Sircjarr/Kt-Cmd-Args-Parser/actions?query=workflow%3ACodeQL "Code quality workflow status")
 [![Javadoc](https://img.shields.io/badge/javadoc-1.0.0-red)](https://jitpack.io/com/github/Sircjarr/Kt-Cmd-Args-Parser/latest/javadoc/)
