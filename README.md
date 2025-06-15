@@ -2,7 +2,7 @@
 ![GitHub CI](https://github.com/Sircjarr/Kt-Cmd-Args-Parser/actions/workflows/gradle.yml/badge.svg "Build and test status")
 ![Coverage](.github/badges/jacoco.svg)
 [![CodeQL](https://github.com/Sircjarr/Kt-Cmd-Args-Parser/workflows/CodeQL/badge.svg)](https://github.com/Sircjarr/Kt-Cmd-Args-Parser/actions?query=workflow%3ACodeQL "Code quality workflow status")
-[![Javadoc](https://img.shields.io/badge/javadoc-1.0.0-red)](https://jitpack.io/com/github/Sircjarr/Kt-Cmd-Args-Parser/latest/javadoc/)
+[![Javadoc](https://img.shields.io/badge/javadoc-1.0.1-red)](https://jitpack.io/com/github/Sircjarr/Kt-Cmd-Args-Parser/latest/javadoc/)
 ![kotlin-version](https://img.shields.io/badge/kotlin-2.1.0-purple)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 <!-- WIP 
@@ -455,7 +455,7 @@ repositories {
 }
 
 dependencies { 
-    implementation 'com.github.sircjarr.cmdargsparser:kt-cmd-args-parser:1.0.0'
+    implementation 'com.github.sircjarr.cmdargsparser:kt-cmd-args-parser:1.0.1'
 }
 ```
 
@@ -470,7 +470,7 @@ repositories {
 }
 
 dependencies { 
-    implementation("com.github.sircjarr.cmdargsparser:kt-cmd-args-parser:1.0.0")
+    implementation("com.github.sircjarr.cmdargsparser:kt-cmd-args-parser:1.0.1")
 }
 ```
 
@@ -486,7 +486,7 @@ dependencies {
 <dependency>
   <groupId>com.github.sircjarr.cmdargsparser</groupId>
   <artifactId>kt-cmd-args-parser</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
 </dependency>
 ```
 
