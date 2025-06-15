@@ -43,7 +43,6 @@ An easy-to-use command-line argument parser for Kotlin apps. Interprets an `Arra
     - [File encryptor example](#file-encryptor-example)
     - [Subcommands and help builtin](#subcommands-and-help-builtin)
 - [Exceptions and error logs](#exceptions-and-error-logs)
-- [Tests](#tests)
 - [Importing the library](#importing-the-library)
 - [Todo](#todo)
 - [Contributing](#contributing)
@@ -439,9 +438,6 @@ error: [-i, --include] Required value not found
 error: No value specified for arg -x
 error: Positional arg(s) not provided: DEST
 ```
-
-## Tests
-There are 40+ [unit tests](src/test/kotlin) covering all features and error handling.
 
 ## Importing the library
 ### gradle
