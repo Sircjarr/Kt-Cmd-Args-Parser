@@ -55,31 +55,6 @@ tasks.jacocoTestReport {
     }
 }
 
-publishing {
-    repositories {
-        maven {
-            name = "Kt-Cmd-Args-Parser"
-            url = uri("https://maven.pkg.github.com/Sircjarr/Kt-Cmd-Args-Parser")
-            credentials {
-                username = project.findProperty("gpr.user") as String?
-                    ?: System.getenv("USERNAME")
-                password = project.findProperty("gpr.key") as String?
-                    ?: System.getenv("TOKEN")
-            }
-        }
-    }
-
-    publications {
-        register<MavenPublication>("gpr") {
-            from(components["java"])
-            description = "A simple but powerful command-line argument parser for Kotlin apps."
-            version = rootProject.version.toString()
-            artifactId = rootProject.name
-            groupId = rootProject.group.toString()
-        }
-    }
-}
-
 tasks.register<Jar>("dokkaHtmlJar") {
     dependsOn(tasks.dokkaHtml)
     from(tasks.dokkaHtml.flatMap { it.outputDirectory })
@@ -90,4 +65,16 @@ tasks.register<Jar>("dokkaJavadocJar") {
     dependsOn(tasks.dokkaJavadoc)
     from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
     archiveClassifier.set("javadoc")
+}
+
+publishing {
+    publications {
+        register<MavenPublication>("gpr") {
+            from(components["java"])
+            description = "A simple but powerful command-line argument parser for Kotlin apps."
+            version = rootProject.version.toString()
+            artifactId = rootProject.name
+            groupId = rootProject.group.toString()
+        }
+    }
 }
